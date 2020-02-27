@@ -2,9 +2,6 @@
 # PyProx! Simple network proxy to analyse what is passing between you and your target.
 
 
-
-
-
 '''
 pgrep -f youAppFile.py | xargs kill -9
 
@@ -18,22 +15,14 @@ pkill -9 python
 
 
 show_mesg = [
+"=20200227= VC.1 Remove(data.decode('utf8') ", 
+"=20200227= VC.1 New project MT CCE, datetime.datetime.utcnow() <== datetime.datetime.now() ",
 "=20191030= VA.1 Dis/Enable MQTT by .-.-. or none ",
-"=20190917= V8.3 MQTT, #brkp-002-1 PyProxRemote::,self.transport.close() ",
-"=20190917= V8.2 MQTT, #brkp-001-1 PyProxLocal::,self.transport.close() ",
-"=20190916= V8.1 MQTT, roll-back ; add minimal hex log type h;print_tomtqq type h , w, a,e",
-"=20190915= V8 MQTT, add mqtt.;comment ##8# . ",
-"=20190708= V6 Pro, Fix [*] Received--TRANS 166 bytes from local ; socket.send() raised exception. ",
-"=20190624= V5 Pro, TRANS the receiver ",
-"=20181211= V4 NT, improve mis-match protocol ",
-"=20181209= V4 NT, fix bug trans ",
-"=20181207= V4 NT, add fifo2ms ",
-"=20181205= V4, add -t trans ",
 "***^^ What's new *****",
 ]
 
 
-import fifo2mt as p0
+import mtcce as p0
 import sys
 import asyncio
 import socket
@@ -81,15 +70,16 @@ class PyProxLocal(asyncio.Protocol):
 		global LocalBuffer
 		print()
 		##8#log("i", "Received {} bytes from local".format(len(data)))
-		##8#log('i', "Timestamp: {} ".format(datetime.datetime.now()))
+		##8#log('i', "Timestamp: {} ".format(datetime.datetime.utcnow()))
 		##8#log("i", "Received--RAW")
-		log("i", "Received {} bytes from local\r\nTimestamp: {} \r\nReceived--RAW".format(len(data), datetime.datetime.now())) ##8#
+		log("i", "Received {} bytes from local\r\nTimestamp: {} \r\nReceived--RAW".format(len(data), datetime.datetime.utcnow())) ##8#
 		hexdump(data, '>')
 		
 		if Trans:
 			##8#log("i", "Received--TRANS--local")
-			#dataret0 = p0.fifo2mt(data.decode('utf8'),_verbose=True)
-			dataret0 = p0.fifo2mt(data.decode('utf8'),_verbose=False)
+			#dataret0 = p0.proto2msg(data.decode('utf8'),_verbose=True)
+			#dataret0 = p0.proto2msg(data.decode('utf8'),_verbose=False)
+			dataret0 = p0.proto2msg(data.decode(),_verbose=True) # byte
 			##8#log("i", "dataret0 =  {}".format(dataret0))
 			if len(dataret0)<7:
 				log("i", "Error protocol convertor, Auto roll-back")
@@ -144,14 +134,15 @@ class PyProxRemote(asyncio.Protocol):
 		global RemoteBuffer
 		print()
 		##8#log("i", "Received {} bytes from remote".format(len(data)))
-		##8#log('i', "Timestamp: {} ".format(datetime.datetime.now()))
-		log("i", "Received {} bytes from remote\r\nTimestamp: {} ".format(len(data),datetime.datetime.now())) ##8#
+		##8#log('i', "Timestamp: {} ".format(datetime.datetime.utcnow()))
+		log("i", "Received {} bytes from remote\r\nTimestamp: {} ".format(len(data),datetime.datetime.utcnow())) ##8#
 		hexdump(data, '<')
 
 		if Trans:
 			##8#log("i", "Received--TRANS--remote")
-			#dataret0 = p0.mt2fi(data.decode('utf8'),_verbose=True)
-			dataret0 = p0.mt2fi(data.decode('utf8'),_verbose=False)
+			#dataret0 = p0.cmd2proto(data.decode('utf8'),_verbose=True)
+			#dataret0 = p0.cmd2proto(data.decode('utf8'),_verbose=False)
+			dataret0 = p0.cmd2proto(data.decode(),_verbose=True) # byte
 			##8#log("i", "dataret0 =  {}".format(dataret0))
 			if len(dataret0)<7:
 				log("i", "Error protocol convertor, Auto roll-back")
@@ -186,7 +177,7 @@ def parse_params():
 	parser.add_argument('-M', '--mqtt', help="mqtt ip address", required=False, type=str, default="none")
 	parser.add_argument('-o', '--output', help="Output type (Hexadecimal, Ascii, Canonical)", choices=['hex', 'ascii', 'canon'], required=False, default='canon')
 	parser.add_argument('-v', '--verbose', help="Verbose mode", action="store_true", required=False)
-	parser.add_argument('-t', '--trans', help="Transformation fifo2mt mode", action="store_true", required=False)
+	parser.add_argument('-t', '--trans', help="Transformation proto2msg mode", action="store_true", required=False)
 	return parser.parse_args()
 
 
@@ -194,7 +185,7 @@ def on_connect2(client, userdata, flags, rc):
 	print('CONNACK received with code %d.' % (rc))
 	#self.subscribe(MQTT_TOPIC1)
 	
-MQTT_TOPIC_UP = "test99/pyprox.fifo2mt/40063.up"
+MQTT_TOPIC_UP = "test99/pyprox.proto2msg/40063.up"
 
 isconnect_mqtt_first = False
 MQTTHost = ''
@@ -320,6 +311,8 @@ def if2ip(ifname):
 def main():
 	global Verbose, Output, Trans, MQTTHost
 
+	print( "Starting ..\r\n  Timestamp: {} ".format(datetime.datetime.utcnow()))
+    
 	for (i, val) in enumerate(show_mesg):
 		print(val)
 
