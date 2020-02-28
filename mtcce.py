@@ -23,9 +23,12 @@ SOFTWARE.
 '''
 
 #Fifo
+# Version 2
+# 2020-02-27 1. binascii
 # Version 1
 # 2020-02-27 1. init
 
+import binascii
 
 __code_version = 'mtcce.v1'
 
@@ -57,6 +60,35 @@ def proto2msg(datin,_verbose=False):
         print(__code_version)
         print(datin)
 
+    if len(datin) >0 :
+        rawhex = str(binascii.hexlify(datin)).upper()
+        rawhex = rawhex.replace('B\'', '')
+        rawhex = rawhex.replace('b\'', '')
+        rawhex = rawhex.replace('\'', '')
+    
+    else:
+        return 0
+
+    if _verbose:
+        print('>>rawhex')
+        print(rawhex)
+                            
+    _header1 = rawhex[:28*2] # 28-byte first
+    _header1 = str(binascii.unhexlify(_header1))
+    _header1 = _header1.replace('B\'', '')
+    _header1 = _header1.replace('b\'', '')
+    _header1 = _header1.replace('\'', '')
+    
+    if not ('$$' in _header1) :
+        return 0
+    
+    if not (',CCE,' in _header1) :
+        return 0
+    
+    if _verbose:
+        print('>>Header-1')
+        print(_header1)
+    
     postdat = datin
     
     if _verbose:
@@ -84,11 +116,11 @@ def cmd2proto(datin,_verbose=False):
 def main():
     print("main program")
        
-    proto2msg("SSS")
-    proto2msg("CCC",_verbose=True)
+    proto2msg("SSS".encode())
+    proto2msg("CCC".encode(),_verbose=True)
     
     for (i, dat) in enumerate(Sampledat):
-        proto2msg(dat,_verbose=True)
+        proto2msg(dat.encode(),_verbose=True)
         
  
     cmd2proto("SSS")
@@ -101,9 +133,7 @@ if __name__=='__main__':
     main()
 
 
-
 '''
-
 
 
 '''
