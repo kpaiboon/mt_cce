@@ -70,8 +70,25 @@ def proto2msg(datin,_verbose=False):
         return 0
 
     if _verbose:
+        print('>>rawhex')
         print(rawhex)
-        
+                            
+    _header1 = rawhex[:28*2] # 28-byte first
+    _header1 = str(binascii.unhexlify(_header1))
+    _header1 = _header1.replace('B\'', '')
+    _header1 = _header1.replace('b\'', '')
+    _header1 = _header1.replace('\'', '')
+    
+    if not ('$$' in _header1) :
+        return 0
+    
+    if not (',CCE,' in _header1) :
+        return 0
+    
+    if _verbose:
+        print('>>Header-1')
+        print(_header1)
+    
     postdat = datin
     
     if _verbose:
