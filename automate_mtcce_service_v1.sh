@@ -1,7 +1,5 @@
 #!/bin/bash
 echo "Hello World"
-echo "Fifo starting in 5s"
-
 
 # Loop forever (until break is issued)
 while true; do
@@ -17,7 +15,7 @@ echo "Current Date is: $Day-$Month-$Year"
 echo "Current Time is: $Hour:$Minute:$Second"
 echo "Local Time is: [$Year-$Month-$Day $Hour:$Minute:$Second]"
 
-echo "Fifo starting in 5s"
+echo "MT CCE starting in 5s"
 
 
 #sleep
@@ -27,20 +25,20 @@ echo "Completed"
 
 
 #ps aux  |  grep -i csp_build  |  awk '{print $2}'  |  xargs sudo kill -9
-ps aux  |  grep -i a1pyprox.py  |  awk '{print $2}'  |  xargs kill -9
-ps aux  |  grep -i a1pyprox.py  |  awk '{print $2}'  |  xargs kill -9
+ps aux  |  grep -i c1pyprox.py  |  awk '{print $2}'  |  xargs kill -9
+ps aux  |  grep -i c1pyprox.py  |  awk '{print $2}'  |  xargs kill -9
 
 echo "Wait for 10 seconds to start /xxxxxx.sh"
 sleep 10
 echo "Completed" 
 
-#nohup ./run_fifo_.sh &
+#nohup ./run_cce_.sh &
 
-nohup ./run_fifo_.sh >> "./logfile.$(date +'%Y-%m-%d').log"   &
+nohup ./run_cce_.sh >> "./logfile.$(date +'%Y-%m-%d').log"   &
 
 
-echo "Wait for  1  hours to loop"
-sleep  3600
+echo "Wait for  30 mins to loop"
+sleep  1800
 echo "Completed"
 
 
