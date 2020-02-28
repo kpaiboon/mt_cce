@@ -159,16 +159,12 @@ def proto2msg(datin,_verbose=False):
         remaincontainhex = remaincontainhex[(_intDataPkgLen+2)*2:]
         if _verbose:
             print('x',x)
-            print('>>Header-2_intDataPkgLen',_hexDataPkgLen,_intDataPkgLen)
-            print('>>Header-2_intNumDataPkgID',_hexNumDataPkgID,_intNumDataPkgID)
-            print('>>Header-2_len(partialhex)',len(partialhex))
+            print('>>Small-Pkg_intDataPkgLen',_hexDataPkgLen,_intDataPkgLen)
+            print('>>Small-Pkg_intNumDataPkgID',_hexNumDataPkgID,_intNumDataPkgID)
+            print('>>Small-Pkg_len(partialhex)',len(partialhex))
             print(partialhex)
-            print('>>Header-2_len(remaincontainhex)',len(remaincontainhex))
+            print('>>Small-Pkg_len(remaincontainhex)',len(remaincontainhex))
             print(remaincontainhex)
-
-    
-    
-
         
         
     
