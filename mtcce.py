@@ -52,10 +52,10 @@ Sampledathex = [
     
 Samplecmd = [
     '$$k28,864507030181266,B25,60*1B',
-    '@@k28,864507030181266,B25,60*1B',
-    '@@z25,864507030181266,E91*9B\r\n',
-    '@@\60,864507030181266,C50,22,23,24,0,0,0,0,0,0,0,0,0,0,0,0,0*D4',
-    '@@a31,868998030242818,C07,*102#*99', #This Fifo USSD for Dtac '*102#'
+    #'@@k28,864507030181266,B25,60*1B',
+    #'@@z25,864507030181266,E91*9B\r\n',
+    #'@@\60,864507030181266,C50,22,23,24,0,0,0,0,0,0,0,0,0,0,0,0,0*D4',
+    #'@@a31,868998030242818,C07,*102#*99', #This Fifo USSD for Dtac '*102#'
     '@@G25,864507030181266,B70*62']
 
 
@@ -66,19 +66,18 @@ def proto2msg(datin,_verbose=False):
     datret =""
     if _verbose:
         print(__code_version)
-        print('>>len(datin)',len(datin))
-        print(datin)
 
-    if len(datin) >0 :
+    if len(datin) >32 :
         rawhex = str(binascii.hexlify(datin)).upper()
         rawhex = rawhex.replace('B\'', '')
         rawhex = rawhex.replace('b\'', '')
         rawhex = rawhex.replace('\'', '')
-    
     else:
         return 0
 
     if _verbose:
+        print('>>len(datin)',len(datin))
+        print(datin)
         print('>>len(rawhex)',len(rawhex))
         print('>>rawhex')
         print(rawhex)
@@ -90,10 +89,17 @@ def proto2msg(datin,_verbose=False):
     _header1 = _header1.replace('b\'', '')
     _header1 = _header1.replace('\'', '')
     
+    # \r\n
+    _tail1hex = rawhex[len(rawhex)-(2*2):] # Last 2byte
+
+    
     if not ('$$' in _header1) :
         return 0
     
     if not (',CCE,' in _header1) :
+        return 0
+
+    if not ('0D0A' in _tail1hex.upper()) :
         return 0
     
     _header_indentifier = str(_header1[2:(2+1)])
@@ -103,7 +109,6 @@ def proto2msg(datin,_verbose=False):
     _header_cmdtype = _tmp[2]
     
     
-    
     if _verbose:
         print('>>Header-1')
         print(_header1)
@@ -111,6 +116,9 @@ def proto2msg(datin,_verbose=False):
         print(_header_intdatalen)
         print(_header_imei)
         print(_header_cmdtype)
+        
+        print('>>_Tail-1-hex')
+        print(_tail1hex)
     
     # Test
     #a = '\x19\x00\x00\xF0'.encode()
@@ -120,10 +128,6 @@ def proto2msg(datin,_verbose=False):
     _intRemainBuffer = int.from_bytes(binascii.unhexlify(_hexRemainBuffer),'little',signed=False)
     _hexNumSmallPkg = rawhex[(32*2):((32+2)*2)] # 2-byte
     _intNumSmallPkg = int.from_bytes(binascii.unhexlify(_hexNumSmallPkg),'little',signed=False)
-
-
-
-    
     
     if _verbose:
         print('>>Header-2_intRemainBuffer')
@@ -165,9 +169,7 @@ def proto2msg(datin,_verbose=False):
             print(partialhex)
             print('>>Small-Pkg_len(remaincontainhex)',len(remaincontainhex))
             print(remaincontainhex)
-        
-        
-    
+
     postdat = datin
     
     if _verbose:
