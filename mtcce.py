@@ -169,6 +169,92 @@ def proto2msg(datin,_verbose=False):
             print(partialhex)
             print('>>Small-Pkg_len(remaincontainhex)',len(remaincontainhex))
             print(remaincontainhex)
+        
+        #0-loop
+        remainxbytehex = partialhex[4*2:]
+        
+        xbytehex = remainxbytehex
+        
+        _hexNum1byteID = xbytehex[(0*2):((0+1)*2)] # 1-byte
+        _intNum1byteID = int.from_bytes(binascii.unhexlify(_hexNum1byteID),'little',signed=False)
+
+        for x in range(_intNum1byteID):
+            y= 1 + (x*2)
+            _xidhex =  xbytehex[(y*2):((y+1)*2)] # 1-byte
+            _xidint = int.from_bytes(binascii.unhexlify(_xidhex),'little',signed=False)
+            y=y+1
+            _xrawhex = xbytehex[(y*2):((y+1)*2)] # 1-byte
+            
+            if _verbose:
+                print('x',x)
+                print('>>x-byte__xidhex',_xidhex,_xidhex)
+                print('>>x-byte__xidint',_xidint,_xidint)
+                print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
+                
+        remainxbytehex = xbytehex[( 1+ (_intNum1byteID*2))*2:]
+        if _verbose:
+            print('>>x-byte_hexNum1byteID',_hexNum1byteID,_hexNum1byteID)
+            print('>>x-byte_intNum1byteID',_intNum1byteID,_intNum1byteID)
+            print('>>x-byte_len(xbytehex)',len(xbytehex))
+            print(xbytehex)
+            print('>>x-byte_len(remainxbytehex)',len(remainxbytehex))
+            print(remainxbytehex)
+
+        
+        xbytehex = remainxbytehex
+        
+        _hexNum2byteID = xbytehex[(0*2):((0+1)*2)] # 1-byte
+        _intNum2byteID = int.from_bytes(binascii.unhexlify(_hexNum2byteID),'little',signed=False)
+
+        for x in range(_intNum2byteID):
+            y= 1 + (x*3)
+            _xidhex =  xbytehex[(y*2):((y+1)*2)] # 1-byte
+            _xidint = int.from_bytes(binascii.unhexlify(_xidhex),'little',signed=False)
+            y=y+1
+            _xrawhex = xbytehex[(y*2):((y+2)*2)] # 2-byte
+            
+            if _verbose:
+                print('x',x)
+                print('>>x-byte__xidhex',_xidhex,_xidhex)
+                print('>>x-byte__xidint',_xidint,_xidint)
+                print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
+                
+        remainxbytehex = xbytehex[( 1+ (_intNum2byteID*3))*2:]
+        if _verbose:
+            print('>>x-byte_hexNum2byteID',_hexNum2byteID,_hexNum2byteID)
+            print('>>x-byte_intNum2byteID',_intNum2byteID,_intNum2byteID)
+            print('>>x-byte_len(xbytehex)',len(xbytehex))
+            print(xbytehex)
+            print('>>x-byte_len(remainxbytehex)',len(remainxbytehex))
+            print(remainxbytehex)
+        
+        xbytehex = remainxbytehex
+        
+        _hexNum4byteID = xbytehex[(0*2):((0+1)*2)] # 1-byte
+        _intNum4byteID = int.from_bytes(binascii.unhexlify(_hexNum4byteID),'little',signed=False)
+
+        for x in range(_intNum4byteID):
+            y= 1 + (x*5)
+            _xidhex =  xbytehex[(y*2):((y+1)*2)] # 1-byte
+            _xidint = int.from_bytes(binascii.unhexlify(_xidhex),'little',signed=False)
+            y=y+1
+            _xrawhex = xbytehex[(y*2):((y+4)*2)] # 4-byte
+            
+            if _verbose:
+                print('x',x)
+                print('>>x-byte__xidhex',_xidhex,_xidhex)
+                print('>>x-byte__xidint',_xidint,_xidint)
+                print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
+                
+        remainxbytehex = xbytehex[( 1+ (_intNum4byteID*5))*2:]
+        if _verbose:
+            print('>>x-byte_hexNum4byteID',_hexNum4byteID,_hexNum4byteID)
+            print('>>x-byte_intNum4byteID',_intNum4byteID,_intNum4byteID)
+            print('>>x-byte_len(xbytehex)',len(xbytehex))
+            print(xbytehex)
+            print('>>x-byte_len(remainxbytehex)',len(remainxbytehex))
+            print(remainxbytehex)        
+        
 
     postdat = datin
     
