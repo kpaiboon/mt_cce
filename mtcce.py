@@ -30,7 +30,9 @@ SOFTWARE.
 # Version 1
 # 2020-02-27 1. init
 
+import datetime
 import binascii
+import json
 
 __code_version = 'mtcce.v3'
 
@@ -110,6 +112,10 @@ def proto2msg(datin,_verbose=False):
     _header_imei = _tmp[1]
     _header_cmdtype = _tmp[2]
     
+    msg1='{"country abbreviation":"US","places":[{"place name":"Belmont","longitude":"-71.4594","post code":"02178","latitude":"42.4464"},{"place name":"Belmont","longitude":"-71.2044","post code":"02478","latitude":"42.4128"}],"country":"United States","place name":"Belmont","state":"Massachusetts","state abbreviation":"MA"}'
+    _js = json.loads(msg1)
+    _js['ts_crejob'] = '{}'.format(datetime.datetime.utcnow())
+    
     
     if _verbose:
         print('>>Header-1')
@@ -121,6 +127,8 @@ def proto2msg(datin,_verbose=False):
         
         print('>>_Tail-1-hex')
         print(_tail1hex)
+        
+        print(json.dumps(_js, indent=4, sort_keys=True))
     
     # Test
     #a = '\x19\x00\x00\xF0'.encode()
@@ -294,7 +302,11 @@ def proto2msg(datin,_verbose=False):
                 print('>>x-byte_len(remainxbytehex)',len(remainxbytehex))
                 print(remainxbytehex)
 
-
+    # Last func
+    _js['ts_clojob'] = '{}'.format(datetime.datetime.utcnow())
+    if _verbose:       
+        print(json.dumps(_js, indent=4, sort_keys=True))
+        
     postdat = datin
     
     if _verbose:
