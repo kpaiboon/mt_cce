@@ -367,6 +367,7 @@ for song in jobj1:
 for note in jobj1['places']:
   print(note)
 
+# For dict JSON
 
 for (_k, _v) in jobj1.items():
   print("Key: " + _k)
@@ -376,6 +377,7 @@ for (_k, _v) in jobj1['places'][0].items():
   print("Key: " + _k)
   print("Value: " + str(_v))
 
-
+#JSON Tree
+print(json.dumps(jobj1, indent=4, sort_keys=True))
 
 '''
