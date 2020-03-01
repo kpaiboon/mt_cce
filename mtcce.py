@@ -22,7 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
-#Fifo
+#MT CCE
+# Version 3
+# 2020-03-01 1. JSON Practice
 # Version 2
 # 2020-02-27 1. binascii
 # Version 1
@@ -364,6 +366,16 @@ for song in jobj1:
 
 for note in jobj1['places']:
   print(note)
+
+
+for (_k, _v) in jobj1.items():
+  print("Key: " + _k)
+  print("Value: " + str(_v))
+
+for (_k, _v) in jobj1['places'][0].items():
+  print("Key: " + _k)
+  print("Value: " + str(_v))
+
 
 
 '''
