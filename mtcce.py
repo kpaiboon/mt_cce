@@ -404,6 +404,15 @@ if __name__=='__main__':
 
 
 '''
+A nested dict is a dictionary within a dictionary. A very simple thing.
+
+>>> d = {}
+>>> d['dict1'] = {} # must: init nest dict
+>>> d['dict1']['innerkey'] = 'value'
+>>> d
+{'dict1': {'innerkey': 'value'}}
+
+
 # https://jsoneditoronline.org/#left=local.xowame&right=local.wilija
 
 import json
