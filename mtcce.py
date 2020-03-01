@@ -32,7 +32,7 @@ SOFTWARE.
 
 import binascii
 
-__code_version = 'mtcce.v1'
+__code_version = 'mtcce.v3'
 
 __autoSpeedforceIO = 5 #5km/h
 
