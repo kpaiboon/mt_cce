@@ -335,6 +335,35 @@ if __name__=='__main__':
 
 
 '''
+# https://jsoneditoronline.org/#left=local.xowame&right=local.wilija
+
+import json
+
+msg1='{"country abbreviation":"US","places":[{"place name":"Belmont","longitude":"-71.4594","post code":"02178","latitude":"42.4464"},{"place name":"Belmont","longitude":"-71.2044","post code":"02478","latitude":"42.4128"}],"country":"United States","place name":"Belmont","state":"Massachusetts","state abbreviation":"MA"}'
+print(msg1)
+
+jobj1=json.loads(msg1)
+
+print(len(jobj1))
+print(jobj1)
+
+print(jobj1['country abbreviation'])
+print(jobj1['state abbreviation'])
+
+print(len(jobj1['places']))
+print(jobj1['places'])
+print(jobj1['places'][0])
+print(jobj1['places'][1])
+
+print(len(jobj1['places'][0]))
+print(jobj1['places'][0]['place name'])
+print(jobj1['places'][0]['post code'])
+
+for song in jobj1:
+  print(song)
+
+for note in jobj1['places']:
+  print(note)
 
 
 '''
