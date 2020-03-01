@@ -114,8 +114,14 @@ def proto2msg(datin,_verbose=False):
     
     msg1='{"country abbreviation":"US","places":[{"place name":"Belmont","longitude":"-71.4594","post code":"02178","latitude":"42.4464"},{"place name":"Belmont","longitude":"-71.2044","post code":"02478","latitude":"42.4128"}],"country":"United States","place name":"Belmont","state":"Massachusetts","state abbreviation":"MA"}'
     _js = json.loads(msg1)
-    _js['ts_crejob'] = '{}'.format(datetime.datetime.utcnow())
-    
+    _js['ts_cjob'] = '{}'.format(datetime.datetime.utcnow())
+
+    _js['h1_rawhex'] = _header1
+    _js['h1_datalen'] = str(_header_intdatalen)
+    _js['h1_pid'] = _header_indentifier
+    _js['h1_imei'] = _header_imei
+    _js['h1_cmdtype'] = _header_cmdtype
+
     
     if _verbose:
         print('>>Header-1')
@@ -159,6 +165,9 @@ def proto2msg(datin,_verbose=False):
     
     if _intNumSmallPkg >  _this_limit_for_numpkg:
         return 0
+
+    _js['h2_remaincache'] = str(_intRemainBuffer)
+    _js['h2_numsmallpkg'] = str(_intNumSmallPkg)
     
     #for x in range(12):
     #  print(x)
@@ -171,6 +180,17 @@ def proto2msg(datin,_verbose=False):
         
         partialhex = remaincontainhex[0:(_intDataPkgLen+1)*2]
         remaincontainhex = remaincontainhex[(_intDataPkgLen+2)*2:]
+        
+        _jskey = 'xx_{:02d}'.format(x)
+        _js[_jskey] = {} # init nest dict
+
+        _js[_jskey]['s_pkg_datalen'] = str(_intDataPkgLen)
+        _js[_jskey]['s_pkg_numdatapkg'] = str(_intNumDataPkgID)
+        _js[_jskey]['s_pkg_partialhexlen'] = str(len(partialhex))
+        _js[_jskey]['s_pkg_partialhex'] = partialhex
+        _js[_jskey]['s_pkg_remaincontainhexlen'] = str(len(remaincontainhex))
+        #_js[_jskey]['s_pkg_remaincontainhex'] = remaincontainhex
+                
         if _verbose:
             print('x',x)
             print('>>Small-Pkg_intDataPkgLen',_hexDataPkgLen,_intDataPkgLen)
@@ -188,11 +208,17 @@ def proto2msg(datin,_verbose=False):
         _hexNum1byteID = xbytehex[(0*2):((0+1)*2)] # 1-byte
         _intNum1byteID = int.from_bytes(binascii.unhexlify(_hexNum1byteID),'little',signed=False)
 
+        _js[_jskey]['c_1byte'] = {} # init nest dict
         for _x in range(_intNum1byteID):
             _y= 1 + (_x*2)
             _xidhex =  xbytehex[(_y*2):((_y+1)*2)] # 1-byte
             _y=_y+1
             _xrawhex = xbytehex[(_y*2):((_y+1)*2)] # 1-byte
+                        
+            _jsy = 'x_{:02d}'.format(_x)
+            _js[_jskey]['c_1byte'][_jsy] = {} # init nest dict            
+            _js[_jskey]['c_1byte'][_jsy]['idhex'] = _xidhex
+            _js[_jskey]['c_1byte'][_jsy]['dahex'] = _xrawhex
             
             if _verbose:
                 print('x',_x)
@@ -207,18 +233,23 @@ def proto2msg(datin,_verbose=False):
             print(xbytehex)
             print('>>x-byte_len(remainxbytehex)',len(remainxbytehex))
             print(remainxbytehex)
-
         
         xbytehex = remainxbytehex
         
         _hexNum2byteID = xbytehex[(0*2):((0+1)*2)] # 1-byte
         _intNum2byteID = int.from_bytes(binascii.unhexlify(_hexNum2byteID),'little',signed=False)
-
+        
+        _js[_jskey]['c_2byte'] = {} # init nest dict
         for _x in range(_intNum2byteID):
             _y= 1 + (_x*3)
             _xidhex =  xbytehex[(_y*2):((_y+1)*2)] # 1-byte
             _y=_y+1
             _xrawhex = xbytehex[(_y*2):((_y+2)*2)] # 2-byte
+            
+            _jsy = 'x_{:02d}'.format(_x)
+            _js[_jskey]['c_2byte'][_jsy] = {} # init nest dict            
+            _js[_jskey]['c_2byte'][_jsy]['idhex'] = _xidhex
+            _js[_jskey]['c_2byte'][_jsy]['dahex'] = _xrawhex
             
             if _verbose:
                 print('x',_x)
@@ -238,12 +269,18 @@ def proto2msg(datin,_verbose=False):
         
         _hexNum4byteID = xbytehex[(0*2):((0+1)*2)] # 1-byte
         _intNum4byteID = int.from_bytes(binascii.unhexlify(_hexNum4byteID),'little',signed=False)
-
+        
+        _js[_jskey]['c_4byte'] = {} # init nest dict
         for _x in range(_intNum4byteID):
             _y= 1 + (_x*5)
             _xidhex =  xbytehex[(_y*2):((_y+1)*2)] # 1-byte
             _y=_y+1
             _xrawhex = xbytehex[(_y*2):((_y+4)*2)] # 4-byte
+            
+            _jsy = 'x_{:02d}'.format(_x)
+            _js[_jskey]['c_4byte'][_jsy] = {} # init nest dict            
+            _js[_jskey]['c_4byte'][_jsy]['idhex'] = _xidhex
+            _js[_jskey]['c_4byte'][_jsy]['dahex'] = _xrawhex
             
             if _verbose:
                 print('x',_x)
@@ -280,10 +317,15 @@ def proto2msg(datin,_verbose=False):
         
         #for x in range(12):
         #  print(x)
-
+        
+        _js[_jskey]['n_byte'] = {} # init nest dict
+        _js[_jskey]['n_byte']['numnbytepkg'] = str(_intNumNBytePkg)
+        
         for _x in range(_intNumNBytePkg):
             
             xbytehex = remainxbytehex
+            
+            _xidhex =  xbytehex[(1*2):((1+1)*2)] # 1-byte
             
             _hexNumNbyteID = xbytehex[(2*2):((2+1)*2)] # 1-byte
             _intNumNbyteID = int.from_bytes(binascii.unhexlify(_hexNumNbyteID),'little',signed=False)
@@ -292,10 +334,19 @@ def proto2msg(datin,_verbose=False):
             _xrawhex = xbytehex[(_y*2):((_y+_intNumNbyteID)*2)] # N-byte
             
             remainxbytehex = xbytehex[(_y+_intNumNbyteID-1)*2:] # Need RAW TCP Checking Nbyte..Nbyte-1....Nbyte-2
+
+            _jsy = 'x_{:02d}'.format(_x)
+            _js[_jskey]['n_byte'][_jsy] = {} # init nest dict
+            _js[_jskey]['n_byte'][_jsy]['nlen'] = str(_intNumNbyteID)
+            _js[_jskey]['n_byte'][_jsy]['idhex'] = _xidhex
+            _js[_jskey]['n_byte'][_jsy]['dahex'] = _xrawhex
+
+            
             if _verbose:
                 print('>>x-byte_hexNumNbyteID',_hexNumNbyteID,_hexNumNbyteID)
                 print('>>x-byte_intNumNbyteID',_intNumNbyteID,_intNumNbyteID)
                 print('>>x-byte__len(xrawhex)',len(_xrawhex),len(_xrawhex))
+                print('>>x-byte__xidhex',_xidhex,_xidhex)
                 print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
                 print('>>x-byte_len(xbytehex)',len(xbytehex))
                 print(xbytehex)
@@ -303,7 +354,9 @@ def proto2msg(datin,_verbose=False):
                 print(remainxbytehex)
 
     # Last func
-    _js['ts_clojob'] = '{}'.format(datetime.datetime.utcnow())
+    _js['in_rawhex'] = rawhex
+    _js['in_rawhex_sz'] = str(int(len(rawhex)/2))
+    _js['ts_ejob'] = '{}'.format(datetime.datetime.utcnow())
     if _verbose:       
         print(json.dumps(_js, indent=4, sort_keys=True))
         
@@ -335,6 +388,7 @@ def main():
     print("main program")
     
     for (i, dat) in enumerate(Sampledathex):
+        print(i)
         proto2msg(binascii.unhexlify(dat),_verbose=True)
         
  
@@ -342,6 +396,7 @@ def main():
     cmd2proto("CCC",_verbose=True)
     
     for (i, dat) in enumerate(Samplecmd):
+        print(i)
         cmd2proto(dat,_verbose=True)
 
 if __name__=='__main__':
