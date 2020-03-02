@@ -303,10 +303,13 @@ def decode(datin,_verbose=False):
             print('>>x-byte_len(remainxbytehex)',len(remainxbytehex))
             print(remainxbytehex)        
         
-
-        _hexNumNBytePkg =  remainxbytehex[(0*2):((0+1)*2)] # 1-byte
-        _intNumNBytePkg = int.from_bytes(binascii.unhexlify(_hexNumNBytePkg),'little',signed=False)
-        
+        if len(remainxbytehex) > 3: # fix bug nbyte >3
+            _hexNumNBytePkg =  remainxbytehex[(0*2):((0+1)*2)] # 1-byte
+            _intNumNBytePkg = int.from_bytes(binascii.unhexlify(_hexNumNBytePkg),'little',signed=False)
+        else: 
+            _hexNumNBytePkg = '00'
+            _intNumNBytePkg = len(_hexNumNBytePkg)
+            
         if _verbose:
             print('>>Header-3_intNumNBytePkg')
             print(_hexNumNBytePkg)
