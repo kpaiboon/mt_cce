@@ -54,7 +54,9 @@ Sampledathex = [
     '242450313036342C3836313538353034303439343436382C4343452C190000000C0054001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C0100000001490904010000000000000054001500050501060907001400150209080000091F010A09000B270016000017000019A2011A26054023000602D0875701034160CC0604E8BFB5240C806800000DEEA003001C0100000001490904010000000000000054001500050501060907001400150209080000091F010A0B000B270016000017000019A2011A26054023000602CF875701033E60CC0604F2BFB5240C806800000DF8A003001C0100000001490904010000000000000054001500050501060A07001400150209080000091F010A08000B270016000017000019A3011A26054023000602D4875701034360CC0604FCBFB5240C806800000D02A103001C0100000001490904010000000000000054001500050501060A07001400150209080000091F010A07000B250016000017000019A2011A26054023000602DA875701033E60CC060406C0B5240C806800000D0BA103001C0100000001490904010000000000000054001500050501060A07001400150209080000091F010A08000B240016000017000019A2011A26054023000602DF875701032F60CC060410C0B5240C806800000D15A103001C0100000001490904010000000000000054001500050501060907001400150209080000091F010A08000B220016000017000019A2011A26054023000602E9875701031460CC06041AC0B5240C806800000D1FA103001C0100000001490904010000000000000054001500050501060907001400150209080000091F010A08000B210016000017000019A2011A26054023000602EE875701030E60CC060424C0B5240C806800000D29A103001C0100000001490904010000000000000054001500050501060907001400150209080000091F010A08000B210016000017000019A2011A26054023000602E9875701031660CC06042EC0B5240C806800000D33A103001C0100000001490904010000000000000054001500050501060907001400150209080000091F010A09000B230016000017000019A2011A26054023000602E687570103FF5FCC060439C0B5240C806800000D3DA103001C0100000001490904010000000000000054001500050501060907001400150209080000091F010A09000B230016000017000019A2011A26054023000602E887570103E75FCC060443C0B5240C806800000D46A103001C0100000001490904010000000000000054001500050501060A070014001502090800000917010A08000B230016000017000019A2011A26054023000602E887570103D75FCC06044DC0B5240C806800000D50A103001C010000000149090401000000000000002A32300D0A'
     ]
 
-    
+Samplejson = [
+    '{"c1b":{"x_00":{"dahex":"01","idhex":"05"},"x_01":{"dahex":"0A","idhex":"06"},"x_02":{"dahex":"00","idhex":"07"},"x_03":{"dahex":"00","idhex":"14"},"x_04":{"dahex":"02","idhex":"15"}},"c2b":{"x_00":{"dahex":"0000","idhex":"08"},"x_01":{"dahex":"1F01","idhex":"09"},"x_02":{"dahex":"0700","idhex":"0A"},"x_03":{"dahex":"2600","idhex":"0B"},"x_04":{"dahex":"0000","idhex":"16"},"x_05":{"dahex":"0000","idhex":"17"},"x_06":{"dahex":"A201","idhex":"19"},"x_07":{"dahex":"2605","idhex":"1A"},"x_08":{"dahex":"2300","idhex":"40"}},"c4b":{"x_00":{"dahex":"D7875701","idhex":"02"},"x_01":{"dahex":"4860CC06","idhex":"03"},"x_02":{"dahex":"DEBFB524","idhex":"04"},"x_03":{"dahex":"80680000","idhex":"0C"},"x_04":{"dahex":"E4A00300","idhex":"0D"},"x_05":{"dahex":"01000000","idhex":"1C"}},"nb":{"numnbytepkg":"1","x_00":{"dahex":"0401000000000000","idhex":"49","nlen":"9"}},"s_pkg_datalen":"84","s_pkg_numdatapkg":"21","s_pkg_partialhex":"54001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C010000000149090401000000000000","s_pkg_partialhexlen":"170","s_pkg_remaincontainhexlen":"1902"}'
+    ]
 Samplecmd = [
     '$$k28,864507030181266,B25,60*1B',
     #'@@k28,864507030181266,B25,60*1B',
@@ -392,7 +394,129 @@ def is_complex(objct):
     return objct
 
     
-  
+
+def pkgdecode(datin,_verbose=False):
+    
+    if _verbose: 
+        print(len(datin))
+    
+    try:
+        _js = json.loads(datin)
+    except ValueError as e:
+        print(e)
+        print("JSON input error")
+        return ''
+
+
+    try:
+        _objc1b = _js['c1b']
+        _objc2b = _js['c2b']
+        _objc4b = _js['c4b']
+        _objnb = _js['nb']
+    except KeyError as e:
+        print(e)
+        print("JSON Get Key 1 error")
+        return ''
+    
+    if _verbose: 
+        print('_objc1b', len(_objc1b) , _objc1b)
+        print('_objc2b', len(_objc2b) , _objc2b)
+        print('_objc4b', len(_objc4b) , _objc4b)
+        print('_objnb', len(_objnb) , _objnb)
+    
+    
+    # init var @ c1b
+    _v_u8GpsValid = 0
+    _v_u8GpsNsat = 0
+    _v_u8GsmStr = 0
+    _v_u8Output = 0
+    _v_u8input = 0
+    for _x in range(len(_objc1b)):
+        _kx = 'x_{:02d}'.format(_x)
+        _xidhex = _objc1b[_kx]['idhex']
+        _xrawhex = _objc1b[_kx]['dahex']
+        if _verbose: 
+            print('_kx', len(_kx) , _kx)
+            print('_xidhex', len(_xidhex) , _xidhex)
+            print('_xrawhex', len(_xrawhex) , _xrawhex)           
+        
+        if _xidhex == '05':
+            _v_u8GpsValid = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+        elif _xidhex == '06':
+            _v_u8GpsNsat= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+        elif _xidhex == '07':
+            _v_u8GsmStr= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+        elif _xidhex == '14':
+            _v_u8Output= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+        elif _xidhex == '15':
+            _v_u8input= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+            
+    if _verbose:
+        print('_v_u8GpsValid', _v_u8GpsValid)
+        print('_v_u8GpsNsat', _v_u8GpsNsat)
+        print('_v_u8GsmStr', _v_u8GsmStr)
+        print('_v_u8Output', _v_u8Output)
+        print('_v_u8input', _v_u8input)
+
+
+    # init var @ c2b
+    _v_u16SpeedKMH = 0
+    _v_u16Heading = 0
+    _v_f32Hdop = 0.0
+    _v_u16Alt = 0
+    _v_f32AD1 = 0.0
+    _v_f32AD2 = 0.0
+    _v_f32AD4 = 0.0
+    _v_f32AD5 = 0.0
+    _v_u16Eventcode = 0
+    
+
+    for _x in range(len(_objc2b)):
+        _kx = 'x_{:02d}'.format(_x)
+        _xidhex = _objc2b[_kx]['idhex']
+        _xrawhex = _objc2b[_kx]['dahex']
+        if _verbose: 
+            print('_kx', len(_kx) , _kx)
+            print('_xidhex', len(_xidhex) , _xidhex)
+            print('_xrawhex', len(_xrawhex) , _xrawhex)           
+        
+        if _xidhex == '08':
+            _v_u16SpeedKMH = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+        elif _xidhex == '09':
+            _v_u16Heading= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+        elif _xidhex == '0A':
+            _v_f32Hdop= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/10
+        elif _xidhex == '1B':
+            _v_u16Alt= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+        elif _xidhex == '16':
+            _v_f32AD1= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/100
+        elif _xidhex == '17':
+            _v_f32AD2= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/100
+        elif _xidhex == '19':
+            _v_f32AD4= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/100
+        elif _xidhex == '1A':
+            _v_f32AD5= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/100
+        elif _xidhex == '40':
+            _v_u16Eventcode= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+            
+    if _verbose:
+        print('_v_u16SpeedKMH', _v_u16SpeedKMH)
+        print('_v_u16Heading', _v_u16Heading)
+        print('_v_f32Hdop', _v_f32Hdop)
+        print('_v_u16Alt', _v_u16Alt)
+        print('_v_f32AD1', _v_f32AD1)
+        print('_v_f32AD2', _v_f32AD2)
+        print('_v_f32AD4', _v_f32AD4)
+        print('_v_f32AD5', _v_f32AD5)
+        print('_v_u16Eventcode', _v_u16Eventcode)   
+        
+    
+    datret = datin 
+    return datret
+
+
+
+
 def proto2msg(datin,_verbose=False):
     _data= str(decode(datin,_verbose=False))
     
@@ -480,6 +604,10 @@ def main():
     for (i, dat) in enumerate(Samplecmd):
         print(i)
         print(cmd2proto(dat,_verbose=True))
+        
+    for (i, dat) in enumerate(Samplejson):
+        print(i)
+        print(pkgdecode(dat,_verbose=True))
 
 if __name__=='__main__':
     main()
