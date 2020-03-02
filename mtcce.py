@@ -418,10 +418,34 @@ def proto2msg(datin,_verbose=False):
     
     if not ( _js['h1_cmdtype'] == 'CCE'):
         return ''
+    
+    _b_obj= _js['b']
+
+    
+    
+    if _verbose:       
+        print('_b_obj', len(_b_obj), _b_obj)
         
+    for _x in range(len(_b_obj)):
+        _kx = 'pkg_{:02d}'.format(_x)
+        
+        _b_obj_c1b= _js['b'][_kx]['c1b']
+
     
-    
-    return _data
+        for _y in range(len(_b_obj_c1b)):
+            _ky = 'x_{:02d}'.format(_y)
+            _idhex = _js['b'][_kx]['c1b'][_ky]['idhex']
+            _rawhex = _js['b'][_kx]['c1b'][_ky]['dahex']
+            
+            if _verbose:
+                print('_b_obj_c1b', len(_b_obj_c1b), _b_obj_c1b)
+                print('_kx', _kx)
+                print('_ky', _ky)
+                print('_idhex', _idhex)
+                print('_rawhex', _rawhex)                
+        
+    datret = _data
+    return datret
     
     
 def cmd2proto(datin,_verbose=False):
