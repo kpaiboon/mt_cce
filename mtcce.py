@@ -29,7 +29,7 @@ SOFTWARE.
 # 2020-02-27 1. binascii
 # Version 1
 # 2020-02-27 1. init
-
+import time
 import datetime
 import binascii
 import json
@@ -485,7 +485,7 @@ def pkgdecode(datin,_verbose=False):
         elif _xidhex == '09':
             _v_u16Heading= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xidhex == '0A':
-            _v_f32Hdop= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/10
+            _v_f32Hdop= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/1
         elif _xidhex == '1B':
             _v_u16Alt= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xidhex == '16':
@@ -509,7 +509,50 @@ def pkgdecode(datin,_verbose=False):
         print('_v_f32AD4', _v_f32AD4)
         print('_v_f32AD5', _v_f32AD5)
         print('_v_u16Eventcode', _v_u16Eventcode)   
+
+    # init var @ c4b
+    _v_f32Lt = 0.0
+    _v_f32Ln = 0.0
+    _v_u32TimeSecSince2000 = 0
+    _v_strGpsUTCyymmddHHMMSS = ''
+    _v_u32Mileage = 0
+    _v_u32RunTimeSec = 0
+    _v_u32SysFlags = 0
+    
+    for _x in range(len(_objc4b)):
+        _kx = 'x_{:02d}'.format(_x)
+        _xidhex = _objc4b[_kx]['idhex']
+        _xrawhex = _objc4b[_kx]['dahex']
+        if _verbose: 
+            print('_kx', len(_kx) , _kx)
+            print('_xidhex', len(_xidhex) , _xidhex)
+            print('_xrawhex', len(_xrawhex) , _xrawhex)           
         
+        if _xidhex == '02':
+            _v_f32Lt = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/1000000
+        elif _xidhex == '03':
+            _v_f32Ln= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/1000000
+        elif _xidhex == '04':
+            _v_u32TimeSecSince2000= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+            
+            _time = time.gmtime(_v_u32TimeSecSince2000 + 946684800) #615890910 + (Since2000), Where January 1, 2000 UNIX time is 946684800.
+            _v_strGpsUTCyymmddHHMMSS = time.strftime("%y%m%d%H%M%S",_time)
+            
+        elif _xidhex == '0C':
+            _v_u32Mileage = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+        elif _xidhex == '0D':
+            _v_u32RunTimeSec = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+        elif _xidhex == '1C':
+            _v_u32SysFlags = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)           
+            
+    if _verbose:
+        print('_v_f32Lt', _v_f32Lt)
+        print('_v_f32Ln', _v_f32Ln)
+        print('_v_u32TimeSecSince2000', _v_u32TimeSecSince2000)
+        print('_v_strGpsUTCyymmddHHMMSS', _v_strGpsUTCyymmddHHMMSS)
+        print('_v_u32Mileage', _v_u32Mileage)
+        print('_v_u32RunTimeSec', _v_u32RunTimeSec)
+        print('_v_u32SysFlags', _v_u32SysFlags)
     
     datret = datin 
     return datret
@@ -604,10 +647,27 @@ def main():
     for (i, dat) in enumerate(Samplecmd):
         print(i)
         print(cmd2proto(dat,_verbose=True))
-        
+    
+    
+    
     for (i, dat) in enumerate(Samplejson):
         print(i)
         print(pkgdecode(dat,_verbose=True))
+        
+    # current date and time
+    _time = time.gmtime(615890910 + 946684800) #615890910 + (Since2000), Where January 1, 2000 UNIX time is 946684800.
+    #s1 = datetime.time(615890910 + 946684800)
+    #s2 = s1.strftime("%d/%m/%Y, %H:%M:%S")
+    # dd/mm/YY H:M:S format
+    print('_time',_time)
+    #print("s2:", s2)
+    
+    timetup = time.strftime("%d/%m/%Y, %H:%M:%S",_time)
+    print('timetup',timetup)
+    
+    _t_gps_yymmddHHMMSS = time.strftime("%y%m%d%H%M%S",_time)
+    print('_t_gps_yymmddHHMMSS',_t_gps_yymmddHHMMSS)
+
 
 if __name__=='__main__':
     main()
