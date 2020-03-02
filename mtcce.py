@@ -64,7 +64,7 @@ Samplecmd = [
     '@@G25,864507030181266,B70*62']
 
 
-def proto2msg(datin,_verbose=False):
+def decode(datin,_verbose=False):
     
     _this_limit_for_numpkg = 100
     
@@ -78,7 +78,7 @@ def proto2msg(datin,_verbose=False):
         rawhex = rawhex.replace('b\'', '')
         rawhex = rawhex.replace('\'', '')
     else:
-        return 0
+        return ''
 
     if _verbose:
         print('>>len(datin)',len(datin))
@@ -99,13 +99,13 @@ def proto2msg(datin,_verbose=False):
 
     
     if not ('$$' in _header1) :
-        return 0
+        return ''
     
     if not (',CCE,' in _header1) :
-        return 0
+        return ''
 
     if not ('0D0A' in _tail1hex.upper()) :
-        return 0
+        return ''
     
     _header_indentifier = str(_header1[2:(2+1)])
     _header_intdatalen = int(_header1[3:(3+4)])
@@ -114,9 +114,13 @@ def proto2msg(datin,_verbose=False):
     _header_cmdtype = _tmp[2]
     
     #msg1='{"country abbreviation":"US","places":[{"place name":"Belmont","longitude":"-71.4594","post code":"02178","latitude":"42.4464"},{"place name":"Belmont","longitude":"-71.2044","post code":"02478","latitude":"42.4128"}],"country":"United States","place name":"Belmont","state":"Massachusetts","state abbreviation":"MA"}'
-    msg1='{"__VERSION__":"0.8"}'
+    msg1='{"__TAG__":"raw"}'
+    
     _js = json.loads(msg1)
+    
+    
     _js['ts_cjob'] = '{}'.format(datetime.datetime.utcnow())
+    _js['__VERSION__'] = __code_version
     
     _js['__UUID__'] = str(uuid.uuid5(uuid.NAMESPACE_DNS, str(datetime.datetime.utcnow()))) # uuid5 + time utc
 
@@ -168,7 +172,7 @@ def proto2msg(datin,_verbose=False):
         print(_intNumSmallPkg)
     
     if _intNumSmallPkg >  _this_limit_for_numpkg:
-        return 0
+        return ''
 
     _js['h2_remaincache'] = str(_intRemainBuffer)
     _js['h2_numsmallpkg'] = str(_intNumSmallPkg)
@@ -316,7 +320,7 @@ def proto2msg(datin,_verbose=False):
             print(_intNumNBytePkg)
         
         if _intNumNBytePkg >  _this_limit_for_numpkg:
-            return 0
+            return ''
         
         #for x in range(12):
         #  print(x)
@@ -360,10 +364,15 @@ def proto2msg(datin,_verbose=False):
     _js['in_rawhex'] = rawhex
     _js['in_rawhex_sz'] = str(int(len(rawhex)/2))
     _js['ts_ejob'] = '{}'.format(datetime.datetime.utcnow())
+    
+    #_data = json.dumps(_js, indent=4, sort_keys=True)
+    _data = json.dumps(_js, sort_keys=True)
+
+    
     if _verbose:       
-        print(json.dumps(_js, indent=4, sort_keys=True))
+        print(json.dumps(_data, indent=4, sort_keys=True))
         
-    postdat = datin
+    postdat = _data
     
     if _verbose:
         print(postdat)
@@ -372,6 +381,49 @@ def proto2msg(datin,_verbose=False):
     return datret
 
 
+
+def is_complex(objct):
+    # use of json loads method with object_hook for check object complex or not
+    if '__complex__' in objct:
+        return complex(objct['real'], objct['img'])
+    return objct
+
+    
+  
+def proto2msg(datin,_verbose=False):
+    _data= str(decode(datin,_verbose=False))
+    
+    print(len(_data))
+    
+    try:
+        _js = json.loads(_data)
+    except ValueError as e:
+        print(e)
+        print("JSON input error")
+        return ''
+    
+    try:
+        _txt_uuid = _js
+        print(_txt_uuid['__UUID__'])
+    except KeyError as e:
+        print(e)
+        print("JSON Get Key 1 error")
+        return ''
+    
+    #_js = json.loads(str(_data))
+    
+    if _verbose:       
+        #print(json.dumps(_js, indent=4, sort_keys=True))
+        print(json.dumps(_js, sort_keys=True))
+    
+    if not ( _js['h1_cmdtype'] == 'CCE'):
+        return ''
+        
+    
+    
+    return _data
+    
+    
 def cmd2proto(datin,_verbose=False):
     datret =""
     if _verbose:
@@ -392,7 +444,7 @@ def main():
     
     for (i, dat) in enumerate(Sampledathex):
         print(i)
-        proto2msg(binascii.unhexlify(dat),_verbose=True)
+        print(proto2msg(binascii.unhexlify(dat),_verbose=True))
         
  
     cmd2proto("SSS")
@@ -400,7 +452,7 @@ def main():
     
     for (i, dat) in enumerate(Samplecmd):
         print(i)
-        cmd2proto(dat,_verbose=True)
+        print(cmd2proto(dat,_verbose=True))
 
 if __name__=='__main__':
     main()
