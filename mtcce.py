@@ -580,7 +580,7 @@ def pkgdecode(datin,_verbose=False):
     # _v_u32Mileage 26752
     # _v_u32RunTimeSec 237796
     # _v_u32SysFlags 1    
-    _x_strImei = '99878881'
+    _x_strImei = '868777888999130'
     _x_strDataID = 'P'
     
     
@@ -589,8 +589,7 @@ def pkgdecode(datin,_verbose=False):
     if _v_u8GpsValid !=0 :
         _y_GpsValid = 'A'
     
-    _y_strBaseStationInfo = '520|15|17F3|01132F0B'
-    
+    _y_strBaseStationInfo = '520|15|17F3|01132F0B'    
     _y_iost = '1F1F'
     _y_adcnew = '1|2|3|4|5|6' # MUST > 5 ch
     _y_rfid = 'rfid'
