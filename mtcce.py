@@ -55,7 +55,7 @@ Sampledathex = [
     ]
 
 Samplejson = [
-    '{"c1b":{"x_00":{"dahex":"01","idhex":"05"},"x_01":{"dahex":"0A","idhex":"06"},"x_02":{"dahex":"00","idhex":"07"},"x_03":{"dahex":"00","idhex":"14"},"x_04":{"dahex":"02","idhex":"15"}},"c2b":{"x_00":{"dahex":"0000","idhex":"08"},"x_01":{"dahex":"1F01","idhex":"09"},"x_02":{"dahex":"0700","idhex":"0A"},"x_03":{"dahex":"2600","idhex":"0B"},"x_04":{"dahex":"0000","idhex":"16"},"x_05":{"dahex":"0000","idhex":"17"},"x_06":{"dahex":"A201","idhex":"19"},"x_07":{"dahex":"2605","idhex":"1A"},"x_08":{"dahex":"2300","idhex":"40"}},"c4b":{"x_00":{"dahex":"D7875701","idhex":"02"},"x_01":{"dahex":"4860CC06","idhex":"03"},"x_02":{"dahex":"DEBFB524","idhex":"04"},"x_03":{"dahex":"80680000","idhex":"0C"},"x_04":{"dahex":"E4A00300","idhex":"0D"},"x_05":{"dahex":"01000000","idhex":"1C"}},"nb":{"numnbytepkg":"1","x_00":{"dahex":"0401000000000000","idhex":"49","nlen":"9"}},"s_pkg_datalen":"84","s_pkg_numdatapkg":"21","s_pkg_partialhex":"54001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C010000000149090401000000000000","s_pkg_partialhexlen":"170","s_pkg_remaincontainhexlen":"1902"}'
+    '{"c1b":{"x_00":{"dahex":"01","idhex":"05"},"x_01":{"dahex":"0A","idhex":"06"},"x_02":{"dahex":"00","idhex":"07"},"x_03":{"dahex":"00","idhex":"14"},"x_04":{"dahex":"02","idhex":"15"}},"c2b":{"x_00":{"dahex":"0000","idhex":"08"},"x_01":{"dahex":"1F01","idhex":"09"},"x_02":{"dahex":"0700","idhex":"0A"},"x_03":{"dahex":"2600","idhex":"0B"},"x_04":{"dahex":"0000","idhex":"16"},"x_05":{"dahex":"0000","idhex":"17"},"x_06":{"dahex":"A201","idhex":"19"},"x_07":{"dahex":"2605","idhex":"1A"},"x_08":{"dahex":"2300","idhex":"40"}},"c4b":{"x_00":{"dahex":"D7875701","idhex":"02"},"x_01":{"dahex":"4860CC06","idhex":"03"},"x_02":{"dahex":"DEBFB524","idhex":"04"},"x_03":{"dahex":"80680000","idhex":"0C"},"x_04":{"dahex":"E4A00300","idhex":"0D"},"x_05":{"dahex":"01000000","idhex":"1C"}},"nb":{"b":{"x_00":{"dahex":"0401000000000000","idhex":"49","nlen":"9"}},"numnbytepkg":"1"},"s_pkg_datalen":"84","s_pkg_numdatapkg":"21","s_pkg_partialhex":"54001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C010000000149090401000000000000","s_pkg_partialhexlen":"170","s_pkg_remaincontainhexlen":"1902"}'
     ]
 Samplecmd = [
     '$$k28,864507030181266,B25,60*1B',
@@ -331,6 +331,7 @@ def decode(datin,_verbose=False):
         #  print(x)
         
         _js['b'][_jskey]['nb'] = {} # init nest dict
+        _js['b'][_jskey]['nb']['b'] = {} # init nest dict
         _js['b'][_jskey]['nb']['numnbytepkg'] = str(_intNumNBytePkg)
         
         for _x in range(_intNumNBytePkg):
@@ -348,10 +349,10 @@ def decode(datin,_verbose=False):
             remainxbytehex = xbytehex[(_y+_intNumNbyteID-1)*2:] # Need RAW TCP Checking Nbyte..Nbyte-1....Nbyte-2
 
             _jsy = 'x_{:02d}'.format(_x)
-            _js['b'][_jskey]['nb'][_jsy] = {} # init nest dict
-            _js['b'][_jskey]['nb'][_jsy]['nlen'] = str(_intNumNbyteID)
-            _js['b'][_jskey]['nb'][_jsy]['idhex'] = _xidhex
-            _js['b'][_jskey]['nb'][_jsy]['dahex'] = _xrawhex
+            _js['b'][_jskey]['nb']['b'][_jsy] = {} # init nest dict
+            _js['b'][_jskey]['nb']['b'][_jsy]['nlen'] = str(_intNumNbyteID)
+            _js['b'][_jskey]['nb']['b'][_jsy]['idhex'] = _xidhex
+            _js['b'][_jskey]['nb']['b'][_jsy]['dahex'] = _xrawhex
 
             
             if _verbose:
@@ -412,7 +413,7 @@ def pkgdecode(datin,_verbose=False):
         _objc1b = _js['c1b']
         _objc2b = _js['c2b']
         _objc4b = _js['c4b']
-        _objnb = _js['nb']
+        _objnb = _js['nb']['b']
     except KeyError as e:
         print(e)
         print("JSON Get Key 1 error")
@@ -561,7 +562,7 @@ def pkgdecode(datin,_verbose=False):
 
 
 def proto2msg(datin,_verbose=False):
-    _data= str(decode(datin,_verbose=False))
+    _data= str(decode(datin,_verbose=True))
     
     print(len(_data))
     
