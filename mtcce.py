@@ -394,8 +394,10 @@ def is_complex(objct):
     return objct
 
     
+    
+    
 
-def pkgdecode(datin,_verbose=False):
+def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID = '1'):
     
     if _verbose: 
         print(len(datin))
@@ -579,9 +581,10 @@ def pkgdecode(datin,_verbose=False):
     # _v_strGpsUTCyymmddHHMMSS 190708084830
     # _v_u32Mileage 26752
     # _v_u32RunTimeSec 237796
-    # _v_u32SysFlags 1    
-    _x_strImei = '868777888999130'
-    _x_strDataID = 'P'
+    # _v_u32SysFlags 1
+    
+    #_x_strImei = '868666777888999'
+    #_x_strDataID = '1'
     
     
     _y_datalen = '99'
