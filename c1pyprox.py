@@ -79,17 +79,18 @@ class PyProxLocal(asyncio.Protocol):
 			##8#log("i", "Received--TRANS--local")
 			#dataret0 = p0.proto2msg(data.decode('utf8'),_verbose=True)
 			#dataret0 = p0.proto2msg(data.decode('utf8'),_verbose=False)
-			dataret0 = p0.proto2msg(data,_verbose=True) # byte
+			dataret0 = p0.proto2msg(data,_verbose=False) # byte
 			##8#log("i", "dataret0 =  {}".format(dataret0))
 			if len(dataret0)<7:
 				log("i", "Error protocol convertor, Auto roll-back")
 			else:
 				#data = dataret0.encode()
-				data = dataret0 # byte
-
+				data = dataret0.encode() # byte
 			log("i", "Received--TRANS {} bytes from local".format(len(data)))
-
+			#print(data)
 			hexdump(data, '>')
+			#hexdump(data.encode(), '>')
+            
 
 		try:
 			print("#brkp-001-00 PyProxLocal::,data=self.data_manip(data)")
@@ -143,7 +144,7 @@ class PyProxRemote(asyncio.Protocol):
 			##8#log("i", "Received--TRANS--remote")
 			#dataret0 = p0.cmd2proto(data.decode('utf8'),_verbose=True)
 			#dataret0 = p0.cmd2proto(data.decode('utf8'),_verbose=False)
-			dataret0 = p0.cmd2proto(data,_verbose=True) # byte
+			dataret0 = p0.cmd2proto(data,_verbose=False) # byte
 			##8#log("i", "dataret0 =  {}".format(dataret0))
 			if len(dataret0)<7:
 				log("i", "Error protocol convertor, Auto roll-back")
