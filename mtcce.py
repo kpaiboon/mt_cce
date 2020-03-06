@@ -622,8 +622,6 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
 def proto2msg(datin,_verbose=False):
     _data= str(decode(datin,_verbose=True))
     
-    print(len(_data))
-    
     try:
         _js = json.loads(_data)
     except ValueError as e:
@@ -632,8 +630,9 @@ def proto2msg(datin,_verbose=False):
         return ''
     
     try:
-        _txt_uuid = _js
-        print(_txt_uuid['__UUID__'])
+        _txt_uuid = _js['__UUID__']
+        _txt_imei = _js['h1_imei']
+        
     except KeyError as e:
         print(e)
         print("JSON Get Key 1 error")
@@ -643,7 +642,12 @@ def proto2msg(datin,_verbose=False):
     
     if _verbose:       
         #print(json.dumps(_js, indent=4, sort_keys=True))
+        print(len(_data))
         print(json.dumps(_js, sort_keys=True))
+        print(_txt_uuid)
+        print(_txt_imei)
+        
+        
     
     if not ( _js['h1_cmdtype'] == 'CCE'):
         return ''
@@ -658,21 +662,14 @@ def proto2msg(datin,_verbose=False):
     for _x in range(len(_b_obj)):
         _kx = 'pkg_{:02d}'.format(_x)
         
-        _b_obj_c1b= _js['b'][_kx]['c1b']
+        _b_obj= _js['b'][_kx]
 
-    
-        for _y in range(len(_b_obj_c1b)):
-            _ky = 'x_{:02d}'.format(_y)
-            _idhex = _js['b'][_kx]['c1b'][_ky]['idhex']
-            _rawhex = _js['b'][_kx]['c1b'][_ky]['dahex']
-            
-            if _verbose:
-                print('_b_obj_c1b', len(_b_obj_c1b), _b_obj_c1b)
-                print('_kx', _kx)
-                print('_ky', _ky)
-                print('_idhex', _idhex)
-                print('_rawhex', _rawhex)                
-        
+
+        if _verbose:
+            print('_b_obj', len(_b_obj), _b_obj)
+            print('_kx', _kx)
+          
+    #def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID = '1'):
     datret = _data
     return datret
     
@@ -711,7 +708,7 @@ def main():
     
     for (i, dat) in enumerate(Samplejson):
         print(i)
-        print(pkgdecode(dat,_verbose=True))
+        print(pkgdecode(dat,_verbose=True,_x_strImei = '868666777888111',_x_strDataID = '2'))
         
     # current date and time
     _time = time.gmtime(615890910 + 946684800) #615890910 + (Since2000), Where January 1, 2000 UNIX time is 946684800.
