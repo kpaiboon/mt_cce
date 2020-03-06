@@ -625,7 +625,9 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
 
 def proto2msg(datin,_verbose=False):
     datret = ""
-    _data= str(decode(datin,_verbose=True))
+    _data= str(decode(datin,_verbose))
+    
+    #print(str(binascii.hexlify(datin)).upper())
     
     try:
         _js = json.loads(_data)
@@ -714,6 +716,19 @@ def main():
     for (i, dat) in enumerate(Samplejson):
         print(i)
         print(pkgdecode(dat,_verbose=True,_x_strImei = '868666777888111',_x_strDataID = '2'))
+        
+    print('####### Silent ##### 2')    
+    for (i, dat) in enumerate(Sampledathex):
+        print(i)
+        print(proto2msg(binascii.unhexlify(dat),_verbose=False))
+    print('####### Silent ##### 3') 
+    for (i, dat) in enumerate(Samplecmd):
+        print(i)
+        print(cmd2proto(dat,_verbose=False))
+    print('####### Silent ##### 4') 
+    for (i, dat) in enumerate(Samplejson):
+        print(i)
+        print(pkgdecode(dat,_verbose=False,_x_strImei = '868666777888111',_x_strDataID = '2'))
         
     # current date and time
     _time = time.gmtime(615890910 + 946684800) #615890910 + (Since2000), Where January 1, 2000 UNIX time is 946684800.
