@@ -399,8 +399,12 @@ def is_complex(objct):
 
 def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID = '1'):
     
+    datin = str(datin)
+    datin = datin.replace('\'', '"')
+    
     if _verbose: 
         print(len(datin))
+        
     
     try:
         _js = json.loads(datin)
@@ -620,6 +624,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
 
 
 def proto2msg(datin,_verbose=False):
+    datret = ""
     _data= str(decode(datin,_verbose=True))
     
     try:
@@ -669,8 +674,8 @@ def proto2msg(datin,_verbose=False):
             print('_b_obj', len(_b_obj), _b_obj)
             print('_kx', _kx)
           
-    #def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID = '1'):
-    datret = _data
+        datret = datret + pkgdecode(_b_obj,_verbose=False,_x_strImei = _txt_imei,_x_strDataID = str(_x %10))
+    #datret = _data
     return datret
     
     
