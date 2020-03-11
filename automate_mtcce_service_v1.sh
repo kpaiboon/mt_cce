@@ -34,7 +34,7 @@ echo "Completed"
 
 #nohup ./run_cce_.sh &
 
-nohup ./run_cce_.sh >> "./logfile.$(date +'%Y-%m-%d').log"   &
+nohup ./run_mtcce_.sh >> "./logfile.$(date +'%Y-%m-%d').log"   &
 
 
 echo "Wait for  30 mins to loop"
