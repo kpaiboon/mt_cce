@@ -71,6 +71,7 @@ Samplecmd = [
 def decode(datin,_verbose=False):
     
     _this_limit_for_numpkg = 100
+    _cce_ofsbyte = 0
     
     datret =""
     if _verbose:
@@ -91,8 +92,24 @@ def decode(datin,_verbose=False):
         print('>>rawhex')
         print(rawhex)
 
-    # $$<Data identifier 1-char><Data length 3-char>,<IMEI 15-char>,<Command type 3-char aka,CCE>,
-    _header1 = rawhex[:28*2] # 28-byte first
+    # $$<Data identifier 1-char><Data length 3-4-char>,<IMEI 15-char>,<Command type 3-char aka,CCE>,
+    
+    #find ',CCE,' = 2C 43 43 45 2C = 2C4343452C ; Max 30 byte nomarl 23-25 byte
+    
+    _cce_ofs =int(rawhex.find('2C4343452C',0,30*2)/2)
+    
+    if _cce_ofs < 5 :
+        return 0
+    
+    _cce_ofs = _cce_ofs + 5 # first byte of binary (after Comma)
+    
+    if _verbose:
+        print('_cce_ofs', _cce_ofs)
+        print('_cce_ofs + 10 *2 Hex', rawhex[_cce_ofs *2 :(_cce_ofs+ 10)*2] )
+        print('_cce_ofs + 10 chr', str(binascii.unhexlify(rawhex[_cce_ofs *2 :(_cce_ofs+ 10)*2])))
+
+
+    _header1 = rawhex[:_cce_ofs*2] # 28-byte first
     _header1 = str(binascii.unhexlify(_header1))
     _header1 = _header1.replace('B\'', '')
     _header1 = _header1.replace('b\'', '')
@@ -112,7 +129,6 @@ def decode(datin,_verbose=False):
         return ''
     
     _header_indentifier = str(_header1[2:(2+1)])
-    _header_intdatalen = int(_header1[3:(3+4)])
     _tmp = _header1.split(',')
     _header_imei = _tmp[1]
     _header_cmdtype = _tmp[2]
@@ -129,7 +145,6 @@ def decode(datin,_verbose=False):
     _js['__UUID__'] = str(uuid.uuid5(uuid.NAMESPACE_DNS, str(datetime.datetime.utcnow()))) # uuid5 + time utc
 
     _js['h1_rawhex'] = _header1
-    _js['h1_datalen'] = str(_header_intdatalen)
     _js['h1_pid'] = _header_indentifier
     _js['h1_imei'] = _header_imei
     _js['h1_cmdtype'] = _header_cmdtype
@@ -139,7 +154,6 @@ def decode(datin,_verbose=False):
         print('>>Header-1')
         print('_header1', len(_header1), _header1)
         print('_header_indentifier', len(_header_indentifier), _header_indentifier)
-        print('_header_intdatalen', _header_intdatalen, _header_intdatalen)
         print('_header_imei', len(_header_imei), _header_imei)
         print('_header_cmdtype', len(_header_cmdtype), _header_cmdtype)
         print('_tail1hex', len(_tail1hex), _tail1hex)
@@ -150,9 +164,9 @@ def decode(datin,_verbose=False):
     #a = '\x19\x00\x00\xF0'.encode()
     #print( int.from_bytes(a, 'little',signed=False))
     
-    _hexRemainBuffer = rawhex[(28*2):((28+4)*2)] # 4-byte
+    _hexRemainBuffer = rawhex[(_cce_ofs*2):((_cce_ofs+4)*2)] # 4-byte
     _intRemainBuffer = int.from_bytes(binascii.unhexlify(_hexRemainBuffer),'little',signed=False)
-    _hexNumSmallPkg = rawhex[(32*2):((32+2)*2)] # 2-byte
+    _hexNumSmallPkg = rawhex[((_cce_ofs+4)*2):((_cce_ofs+2)*2)] # 2-byte
     _intNumSmallPkg = int.from_bytes(binascii.unhexlify(_hexNumSmallPkg),'little',signed=False)
     
     if _verbose:
@@ -164,7 +178,7 @@ def decode(datin,_verbose=False):
         print('_intNumSmallPkg', _intNumSmallPkg, _intNumSmallPkg)
    
 
-    fullcontainhex = rawhex[(34*2):]
+    fullcontainhex = rawhex[((_cce_ofs+4)*2):]
     remaincontainhex = fullcontainhex
 
     if _verbose:
