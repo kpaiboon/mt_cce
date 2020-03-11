@@ -168,7 +168,7 @@ def decode(datin,_verbose=False):
     
     _hexRemainBuffer = rawhex[(_cce_ofs*2):((_cce_ofs+4)*2)] # 4-byte
     _intRemainBuffer = int.from_bytes(binascii.unhexlify(_hexRemainBuffer),'little',signed=False)
-    _hexNumSmallPkg = rawhex[((_cce_ofs+4)*2):((_cce_ofs+2)*2)] # 2-byte
+    _hexNumSmallPkg = rawhex[((_cce_ofs+4)*2):(((_cce_ofs+4)+2)*2)] # 2-byte
     _intNumSmallPkg = int.from_bytes(binascii.unhexlify(_hexNumSmallPkg),'little',signed=False)
     
     if _verbose:
@@ -180,7 +180,7 @@ def decode(datin,_verbose=False):
         print('_intNumSmallPkg', _intNumSmallPkg, _intNumSmallPkg)
    
 
-    fullcontainhex = rawhex[((_cce_ofs+4)*2):]
+    fullcontainhex = rawhex[((_cce_ofs+4+2)*2):]
     remaincontainhex = fullcontainhex
 
     if _verbose:
