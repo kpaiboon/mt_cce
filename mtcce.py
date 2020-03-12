@@ -61,7 +61,8 @@ Sampledathex = [
     ]
 
 Samplejson = [
-    '{"c1b":{"x_00":{"dahex":"01","idhex":"05"},"x_01":{"dahex":"0A","idhex":"06"},"x_02":{"dahex":"00","idhex":"07"},"x_03":{"dahex":"00","idhex":"14"},"x_04":{"dahex":"02","idhex":"15"}},"c2b":{"x_00":{"dahex":"0000","idhex":"08"},"x_01":{"dahex":"1F01","idhex":"09"},"x_02":{"dahex":"0700","idhex":"0A"},"x_03":{"dahex":"2600","idhex":"0B"},"x_04":{"dahex":"0000","idhex":"16"},"x_05":{"dahex":"0000","idhex":"17"},"x_06":{"dahex":"A201","idhex":"19"},"x_07":{"dahex":"2605","idhex":"1A"},"x_08":{"dahex":"2300","idhex":"40"}},"c4b":{"x_00":{"dahex":"D7875701","idhex":"02"},"x_01":{"dahex":"4860CC06","idhex":"03"},"x_02":{"dahex":"DEBFB524","idhex":"04"},"x_03":{"dahex":"80680000","idhex":"0C"},"x_04":{"dahex":"E4A00300","idhex":"0D"},"x_05":{"dahex":"01000000","idhex":"1C"}},"nb":{"numnbytepkg":"1","x_00":{"dahex":"0401000000000000","idhex":"49","nlen":"9"}},"s_pkg_datalen":"84","s_pkg_numdatapkg":"21","s_pkg_partialhex":"54001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C010000000149090401000000000000","s_pkg_partialhexlen":"170","s_pkg_remaincontainhexlen":"1902"}'
+    #'{"c1b":{"x_00":{"dahex":"01","idhex":"05"},"x_01":{"dahex":"0A","idhex":"06"},"x_02":{"dahex":"00","idhex":"07"},"x_03":{"dahex":"00","idhex":"14"},"x_04":{"dahex":"02","idhex":"15"}},"c2b":{"x_00":{"dahex":"0000","idhex":"08"},"x_01":{"dahex":"1F01","idhex":"09"},"x_02":{"dahex":"0700","idhex":"0A"},"x_03":{"dahex":"2600","idhex":"0B"},"x_04":{"dahex":"0000","idhex":"16"},"x_05":{"dahex":"0000","idhex":"17"},"x_06":{"dahex":"A201","idhex":"19"},"x_07":{"dahex":"2605","idhex":"1A"},"x_08":{"dahex":"2300","idhex":"40"}},"c4b":{"x_00":{"dahex":"D7875701","idhex":"02"},"x_01":{"dahex":"4860CC06","idhex":"03"},"x_02":{"dahex":"DEBFB524","idhex":"04"},"x_03":{"dahex":"80680000","idhex":"0C"},"x_04":{"dahex":"E4A00300","idhex":"0D"},"x_05":{"dahex":"01000000","idhex":"1C"}},"nb":{"numnbytepkg":"1","x_00":{"dahex":"0401000000000000","idhex":"49","nlen":"9"}},"s_pkg_datalen":"84","s_pkg_numdatapkg":"21","s_pkg_partialhex":"54001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C010000000149090401000000000000","s_pkg_partialhexlen":"170","s_pkg_remaincontainhexlen":"1902"}'
+    '{"c1b":{"x_00":{"dahex":"01","idhex":"05"},"x_01":{"dahex":"0A","idhex":"06"},"x_02":{"dahex":"00","idhex":"07"},"x_03":{"dahex":"00","idhex":"14"},"x_04":{"dahex":"02","idhex":"15"}},"c2b":{"x_00":{"dahex":"0000","idhex":"08"},"x_01":{"dahex":"1F01","idhex":"09"},"x_02":{"dahex":"0700","idhex":"0A"},"x_03":{"dahex":"2600","idhex":"0B"},"x_04":{"dahex":"0000","idhex":"16"},"x_05":{"dahex":"0000","idhex":"17"},"x_06":{"dahex":"A201","idhex":"19"},"x_07":{"dahex":"2605","idhex":"1A"},"x_08":{"dahex":"2300","idhex":"40"}},"c4b":{"x_00":{"dahex":"D7875701","idhex":"02"},"x_01":{"dahex":"4860CC06","idhex":"03"},"x_02":{"dahex":"DEBFB524","idhex":"04"},"x_03":{"dahex":"80680000","idhex":"0C"},"x_04":{"dahex":"E4A00300","idhex":"0D"},"x_05":{"dahex":"01000000","idhex":"1C"}},"nb":{"x_00":{"dahex":"0401000000000000","idhex":"49","nlen":"9"}},"s_pkg_datalen":"84","s_pkg_numdatapkg":"21","s_pkg_partialhex":"54001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C010000000149090401000000000000","s_pkg_partialhexlen":"170","s_pkg_remaincontainhexlen":"1902"}'
     ]
 Samplecmd = [
     '$$k28,864507030181266,B25,60*1B',
@@ -236,6 +237,7 @@ def decode(datin,_verbose=False):
         _intNum1byteID = int.from_bytes(binascii.unhexlify(_hexNum1byteID),'little',signed=False)
 
         _js['b'][_jskey]['c1b'] = {} # init nest dict
+        _js['b'][_jskey]['num_c1b'] = str(_intNum1byteID)
         for _x in range(_intNum1byteID):
             _y= 1 + (_x*2)
             _xidhex =  xbytehex[(_y*2):((_y+1)*2)] # 1-byte
@@ -267,6 +269,7 @@ def decode(datin,_verbose=False):
         _intNum2byteID = int.from_bytes(binascii.unhexlify(_hexNum2byteID),'little',signed=False)
         
         _js['b'][_jskey]['c2b'] = {} # init nest dict
+        _js['b'][_jskey]['num_c2b'] = str(_intNum2byteID)
         for _x in range(_intNum2byteID):
             _y= 1 + (_x*3)
             _xidhex =  xbytehex[(_y*2):((_y+1)*2)] # 1-byte
@@ -298,6 +301,7 @@ def decode(datin,_verbose=False):
         _intNum4byteID = int.from_bytes(binascii.unhexlify(_hexNum4byteID),'little',signed=False)
         
         _js['b'][_jskey]['c4b'] = {} # init nest dict
+        _js['b'][_jskey]['num_c4b'] = str(_intNum4byteID)
         for _x in range(_intNum4byteID):
             _y= 1 + (_x*5)
             _xidhex =  xbytehex[(_y*2):((_y+1)*2)] # 1-byte
@@ -349,7 +353,8 @@ def decode(datin,_verbose=False):
         #  print(x)
         
         _js['b'][_jskey]['nb'] = {} # init nest dict
-        _js['b'][_jskey]['nb']['numnbytepkg'] = str(_intNumNBytePkg)
+        #_js['b'][_jskey]['nb']['numnbytepkg'] = str(_intNumNBytePkg)
+        _js['b'][_jskey]['num_nb'] = str(_intNumNBytePkg)
         
         for _x in range(_intNumNBytePkg):
             
@@ -584,32 +589,20 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_c39_strCard = ''
     _v_cOE_hexMccNmc = ''
 
-    if _verbose:
-        print('# init var @ nb')
-        print('_objnb', _objnb)
-        print('len(_objnb)', len(_objnb))
-    
-    _v_len_objnb = len(_objnb)
-    if not (_v_len_objnb >= 2):
-        print('error _v_len_objnb (Must >= 2)', _v_len_objnb)
+    for _x in range(len(_objnb)):
+        _kx = 'x_{:02d}'.format(_x)
+        _xidhex = _objnb[_kx]['idhex']
+        _xrawhex = _objnb[_kx]['dahex']
+        if _verbose: 
+            print('_kx', len(_kx) , _kx)
+            print('_xidhex', len(_xidhex) , _xidhex)
+            print('_xrawhex', len(_xrawhex) , _xrawhex)           
         
-    else:
-        _v_len_objnb = _v_len_objnb -1
-        #for _x in range(len(_objnb)):
-        for _x in range(_v_len_objnb):
-            _kx = 'x_{:02d}'.format(_x)
-            _xidhex = _objnb[_kx]['idhex']
-            _xrawhex = _objnb[_kx]['dahex']
-            if _verbose: 
-                print('_kx', len(_kx) , _kx)
-                print('_xidhex', len(_xidhex) , _xidhex)
-                print('_xrawhex', len(_xrawhex) , _xrawhex)           
-            
-            if _xidhex == '39':
-                _v_c39_hexCard = _xrawhex
-                _v_c39_strCard = str(binascii.unhexlify(_xrawhex))
-            elif _xidhex == '0E':
-                _v_cOE_hexMccNmc = _xrawhex
+        if _xidhex == '39':
+            _v_c39_hexCard = _xrawhex
+            _v_c39_strCard = str(binascii.unhexlify(_xrawhex))
+        elif _xidhex == '0E':
+            _v_cOE_hexMccNmc = _xrawhex
             
     if _verbose:
         print('_v_c39_hexCard', _v_c39_hexCard)
