@@ -645,7 +645,13 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     if _v_u8GpsValid !=0 :
         _y_GpsValid = 'A'
     
-    _y_strBaseStationInfo = '520|15|17F3|01132F0B'    
+    _y_strBaseStationInfo = '520|15|17F3|01132F0B'
+
+    if len(_v_cOE_hexMccNmc) >10:
+        # do process
+        _v_u16Eventcode = '35' # force '35' standard
+        
+    
     _y_iost = '1F1F'
     _y_adcnew = '1|2|3|4|5|6' # MUST > 5 ch
     
@@ -656,8 +662,13 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _v_c39_strCard = _v_c39_strCard.replace('\'', '')
         _v_c39_strCard = _v_c39_strCard.replace('\\r\\n', '\r')
         _y_rfid = _v_c39_strCard
+        _v_u16Eventcode = '37' # force '37' log in/out
+        
+        
+        
+    if _verbose:
+        print('Final _v_u16Eventcode', _v_u16Eventcode)
 
-    
     
     pt="$$"
        
