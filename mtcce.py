@@ -578,7 +578,45 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_u32RunTimeSec', _v_u32RunTimeSec)
         print('_v_u32SysFlags', _v_u32SysFlags)
     
+
+    # init var @ nb
+    _v_c39_hexCard = ''
+    _v_c39_strCard = ''
+    _v_cOE_hexMccNmc = ''
+
+    if _verbose:
+        print('# init var @ nb')
+        print('_objnb', _objnb)
+        print('len(_objnb)', len(_objnb))
     
+    _v_len_objnb = len(_objnb)
+    if not (_v_len_objnb >= 2):
+        print('error _v_len_objnb (Must >= 2)', _v_len_objnb)
+        
+    else:
+        _v_len_objnb = _v_len_objnb -1
+        #for _x in range(len(_objnb)):
+        for _x in range(_v_len_objnb):
+            _kx = 'x_{:02d}'.format(_x)
+            _xidhex = _objnb[_kx]['idhex']
+            _xrawhex = _objnb[_kx]['dahex']
+            if _verbose: 
+                print('_kx', len(_kx) , _kx)
+                print('_xidhex', len(_xidhex) , _xidhex)
+                print('_xrawhex', len(_xrawhex) , _xrawhex)           
+            
+            if _xidhex == '39':
+                _v_c39_hexCard = _xrawhex
+                _v_c39_strCard = str(binascii.unhexlify(_xrawhex))
+            elif _xidhex == '0E':
+                _v_cOE_hexMccNmc = _xrawhex
+            
+    if _verbose:
+        print('_v_c39_hexCard', _v_c39_hexCard)
+        print('_v_c39_strCard', _v_c39_strCard)
+        print('_v_cOE_hexMccNmc', _v_cOE_hexMccNmc)
+
+
     
     #Encode
     # _v_u8GpsValid 1
@@ -617,7 +655,15 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _y_strBaseStationInfo = '520|15|17F3|01132F0B'    
     _y_iost = '1F1F'
     _y_adcnew = '1|2|3|4|5|6' # MUST > 5 ch
+    
     _y_rfid = 'rfid'
+    if len(_v_c39_strCard) >10:
+        _v_c39_strCard = _v_c39_strCard.replace('B\'', '')
+        _v_c39_strCard = _v_c39_strCard.replace('b\'', '')
+        _v_c39_strCard = _v_c39_strCard.replace('\'', '')
+        _v_c39_strCard = _v_c39_strCard.replace('\\r\\n', '\r')
+        _y_rfid = _v_c39_strCard
+
     
     
     pt="$$"
@@ -694,7 +740,7 @@ def proto2msg(datin,_verbose=False):
             print('_b_obj', len(_b_obj), _b_obj)
             print('_kx', _kx)
           
-        datret = datret + pkgdecode(_b_obj,_verbose=False,_x_strImei = _txt_imei,_x_strDataID = str(_x %10))
+        datret = datret + pkgdecode(_b_obj,_verbose=_verbose,_x_strImei = _txt_imei,_x_strDataID = str(_x %10))
     #datret = _data
     return datret
     
