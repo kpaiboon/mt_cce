@@ -23,6 +23,8 @@ SOFTWARE.
 '''
 
 #MT CCE
+# Version 5
+# 2020-03-20 1. shortinput <== Longinput 2. __autoSpeedforceIO 3. New ADC Hex <== Int 
 # Version 4
 # 2020-03-03 1. AAA <= CCE 2. mini decode verbose
 # Version 3
@@ -37,7 +39,7 @@ import binascii
 import json
 import uuid
 
-__code_version = 'mtcce.v4'
+__code_version = 'mtcce.v5'
 
 __autoSpeedforceIO = 5 #5km/h
 
@@ -104,7 +106,7 @@ def decode(datin,_verbose=False):
     _cce_ofs =int(rawhex.find('2C4343452C',0,30*2)/2)
     
     if _cce_ofs < 5 :
-        return 0
+        return ''
     
     _cce_ofs = _cce_ofs + 5 # first byte of binary (after Comma)
     
@@ -458,8 +460,9 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_u8GpsValid = 0
     _v_u8GpsNsat = 0
     _v_u8GsmStr = 0
-    _v_u8Output = 0
-    _v_u8input = 0
+    _v_hexOutput = '00'
+    _v_hexInput = '00'
+
     for _x in range(len(_objc1b)):
         _kx = 'x_{:02d}'.format(_x)
         _xidhex = _objc1b[_kx]['idhex']
@@ -476,16 +479,16 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         elif _xidhex == '07':
             _v_u8GsmStr= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xidhex == '14':
-            _v_u8Output= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+            _v_hexOutput= _xrawhex
         elif _xidhex == '15':
-            _v_u8input= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+            _v_hexinput= _xrawhex
             
     if _verbose:
         print('_v_u8GpsValid', _v_u8GpsValid)
         print('_v_u8GpsNsat', _v_u8GpsNsat)
         print('_v_u8GsmStr', _v_u8GsmStr)
-        print('_v_u8Output', _v_u8Output)
-        print('_v_u8input', _v_u8input)
+        print('_v_hexOutput', _v_hexOutput)
+        print('_v_hexInput', _v_hexInput)
 
 
     # init var @ c2b
@@ -493,10 +496,11 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_u16Heading = 0
     _v_f32Hdop = 0.0
     _v_u16Alt = 0
-    _v_f32AD1 = 0.0
-    _v_f32AD2 = 0.0
-    _v_f32AD4 = 0.0
-    _v_f32AD5 = 0.0
+    _v_u16HundredthAD1 = 0
+    _v_u16HundredthAD2 = 0
+    _v_u16HundredthAD3 = 0
+    _v_u16HundredthAD4 = 0
+    _v_u16HundredthAD5 = 0
     _v_u16Eventcode = 0
     
 
@@ -518,13 +522,15 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         elif _xidhex == '1B':
             _v_u16Alt= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xidhex == '16':
-            _v_f32AD1= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/100
+            _v_u16HundredthAD1= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xidhex == '17':
-            _v_f32AD2= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/100
+            _v_u16HundredthAD2= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+        elif _xidhex == '18':
+            _v_u16HundredthAD3= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xidhex == '19':
-            _v_f32AD4= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/100
+            _v_u16HundredthAD4= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xidhex == '1A':
-            _v_f32AD5= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/100
+            _v_u16HundredthAD5= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xidhex == '40':
             _v_u16Eventcode= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
             
@@ -533,10 +539,11 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_u16Heading', _v_u16Heading)
         print('_v_f32Hdop', _v_f32Hdop)
         print('_v_u16Alt', _v_u16Alt)
-        print('_v_f32AD1', _v_f32AD1)
-        print('_v_f32AD2', _v_f32AD2)
-        print('_v_f32AD4', _v_f32AD4)
-        print('_v_f32AD5', _v_f32AD5)
+        print('_v_u16HundredthAD1', _v_u16HundredthAD1)
+        print('_v_u16HundredthAD2', _v_u16HundredthAD2)
+        print('_v_u16HundredthAD4', _v_u16HundredthAD3)
+        print('_v_u16HundredthAD4', _v_u16HundredthAD4)
+        print('_v_u16HundredthAD5', _v_u16HundredthAD5)
         print('_v_u16Eventcode', _v_u16Eventcode)   
 
     # init var @ c4b
@@ -547,6 +554,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_u32Mileage = 0
     _v_u32RunTimeSec = 0
     _v_u32SysFlags = 0
+    _v_hexWordInput = 'FF563412' # use FF as legacy input eg. 04
     
     for _x in range(len(_objc4b)):
         _kx = 'x_{:02d}'.format(_x)
@@ -573,7 +581,12 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
             _v_u32RunTimeSec = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xidhex == '1C':
             _v_u32SysFlags = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)           
+        elif _xidhex == '42':
+            _v_hexWordInput = _xrawhex
+            _v_hexInput = _v_hexWordInput[0:2]
             
+
+
     if _verbose:
         print('_v_f32Lt', _v_f32Lt)
         print('_v_f32Ln', _v_f32Ln)
@@ -582,7 +595,8 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_u32Mileage', _v_u32Mileage)
         print('_v_u32RunTimeSec', _v_u32RunTimeSec)
         print('_v_u32SysFlags', _v_u32SysFlags)
-    
+        print('_v_hexWordInput', _v_hexWordInput)
+        print('Final _v_hexInput', _v_hexInput)
 
     # init var @ nb
     _v_c39_hexCard = ''
@@ -647,13 +661,42 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     
     _y_strBaseStationInfo = '520|15|17F3|01132F0B'
 
-    if len(_v_cOE_hexMccNmc) >10:
-        # do process
-        _v_u16Eventcode = '35' # force '35' standard
+
+    _v_hexLegacyIO = '1F1F'
+    _v_hexLegacyIO = _v_hexInput + _v_hexOutput
+    
+    #debug-case:  autoSpeedforceIO
+    #_v_u16SpeedKMH = 99
+    #_v_hexLegacyIO = '100F'
+    
+    if _v_u16SpeedKMH > __autoSpeedforceIO:
+        _int_big_v_hexLegacyIO = int.from_bytes(binascii.unhexlify(_v_hexLegacyIO),'big',signed=False)
+        
+        #print('_int_big_v_hexLegacyIO', _int_big_v_hexLegacyIO) #debug-geninfo
+        
+        _int_big_v_hexLegacyIO = _int_big_v_hexLegacyIO | int('0x0400',16)
+        
+        #print('_int_big_v_hexLegacyIO', _int_big_v_hexLegacyIO) #debug-geninfo
+        
+        _v_hexLegacyIO = hex(_int_big_v_hexLegacyIO)[2:] # hex(x)[2:] use hex() without 0x get the first two characters removed
+        _v_hexLegacyIO = _v_hexLegacyIO.upper()
+        
+        #print('_v_hexLegacyIO', _v_hexLegacyIO) #debug-geninfo
+        
+        
+        if _verbose:
+            print('Override ACC=On <== speeding over xx kmh')
+            print('Final _v_hexLegacyIO', _v_hexLegacyIO)
         
     
-    _y_iost = '1F1F'
+    _y_iost = _v_hexLegacyIO
+    
     _y_adcnew = '1|2|3|4|5|6' # MUST > 5 ch
+    _y_adcnew = hex(_v_u16HundredthAD1)[2:].upper()
+    _y_adcnew = _y_adcnew + '|' + hex(_v_u16HundredthAD2)[2:].upper()
+    _y_adcnew = _y_adcnew + '|' + hex(_v_u16HundredthAD3)[2:].upper()
+    _y_adcnew = _y_adcnew + '|' + hex(_v_u16HundredthAD4)[2:].upper()
+    _y_adcnew = _y_adcnew + '|' + hex(_v_u16HundredthAD5)[2:].upper()
     
     _y_rfid = 'rfid'
     if len(_v_c39_strCard) >10:
@@ -665,9 +708,13 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _v_u16Eventcode = '37' # force '37' log in/out
         
         
+    if _v_u16Eventcode == 0:
+        # do process
+        _v_u16Eventcode = '35' # force '35' standard
         
     if _verbose:
         print('Final _v_u16Eventcode', _v_u16Eventcode)
+        print('Final _v_hexLegacyIO', _v_hexLegacyIO)
 
     
     pt="$$"
