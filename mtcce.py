@@ -394,7 +394,7 @@ def decode(datin,_verbose=False):
 
     # Last func
     _js['in_rawhex'] = rawhex
-    _js['in_rawhex_sz'] = str(int(len(rawhex)/2))
+    _js['in_numbyte'] = str(int(len(rawhex)/2))
     _js['ts_ejob'] = '{}'.format(datetime.datetime.utcnow())
     
     #_data = json.dumps(_js, indent=4, sort_keys=True)
