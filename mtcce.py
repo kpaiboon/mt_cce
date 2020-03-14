@@ -255,7 +255,7 @@ def decode(datin,_verbose=False):
             
             if _verbose:
                 print('x',_x)
-                print('>>x-byte__xih',_xih,_xih)
+                print('>>x-byte__xidhex',_xih,_xih)
                 print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
                 
         remainxbytehex = xbytehex[( 1+ (_intNum1byteID*2))*2:]
@@ -287,7 +287,7 @@ def decode(datin,_verbose=False):
             
             if _verbose:
                 print('x',_x)
-                print('>>x-byte__xih',_xih,_xih)
+                print('>>x-byte__xidhex',_xih,_xih)
                 print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
                 
         remainxbytehex = xbytehex[( 1+ (_intNum2byteID*3))*2:]
@@ -319,7 +319,7 @@ def decode(datin,_verbose=False):
             
             if _verbose:
                 print('x',_x)
-                print('>>x-byte__xih',_xih,_xih)
+                print('>>x-byte__xidhex',_xih,_xih)
                 print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
                 
         remainxbytehex = xbytehex[( 1+ (_intNum4byteID*5))*2:]
@@ -385,7 +385,7 @@ def decode(datin,_verbose=False):
                 print('>>x-byte_hexNumNbyteID',_hexNumNbyteID,_hexNumNbyteID)
                 print('>>x-byte_intNumNbyteID',_intNumNbyteID,_intNumNbyteID)
                 print('>>x-byte__len(xrawhex)',len(_xrawhex),len(_xrawhex))
-                print('>>x-byte__xih',_xih,_xih)
+                print('>>x-byte__xidhex',_xih,_xih)
                 print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
                 print('>>x-byte_len(xbytehex)',len(xbytehex))
                 print(xbytehex)
@@ -471,7 +471,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _xrawhex = _obj1b[_kx]['dh']
         if _verbose: 
             print('_kx', len(_kx) , _kx)
-            print('_xih', len(_xih) , _xih)
+            print('_xidhex', len(_xih) , _xih)
             print('_xrawhex', len(_xrawhex) , _xrawhex)           
         
         if _xih == '05':
@@ -513,7 +513,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _xrawhex = _obj2b[_kx]['dh']
         if _verbose: 
             print('_kx', len(_kx) , _kx)
-            print('_xih', len(_xih) , _xih)
+            print('_xidhex', len(_xih) , _xih)
             print('_xrawhex', len(_xrawhex) , _xrawhex)           
         
         if _xih == '08':
@@ -570,7 +570,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _xrawhex = _obj4b[_kx]['dh']
         if _verbose: 
             print('_kx', len(_kx) , _kx)
-            print('_xih', len(_xih) , _xih)
+            print('_xidhex', len(_xih) , _xih)
             print('_xrawhex', len(_xrawhex) , _xrawhex)           
         
         if _xih == '02':
@@ -621,7 +621,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _xrawhex = _objnb[_kx]['dh']
         if _verbose: 
             print('_kx', len(_kx) , _kx)
-            print('_xih', len(_xih) , _xih)
+            print('_xidhex', len(_xih) , _xih)
             print('_xrawhex', len(_xrawhex) , _xrawhex)           
         
         if _xih == '39':
