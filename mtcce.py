@@ -680,7 +680,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _hex_lac = hex(_int_lac)[2:].upper() # hex(x)[2:] use hex() without 0x get the first two characters removed
         _int_cid = int.from_bytes(binascii.unhexlify(_v_cOE_hexMccNmc[(6*2):(10*2)]),'little',signed=False)
         _hex_cid = hex(_int_cid)[2:].upper() # hex(x)[2:] use hex() without 0x get the first two characters removed
-        _int_rxl = int.from_bytes(binascii.unhexlify(_v_cOE_hexMccNmc[(10*2):]),'little',signed=True)
+        _int_rxl = int.from_bytes(binascii.unhexlify(_v_cOE_hexMccNmc[(10*2):(12*2)]),'little',signed=True)
         _y_strBaseStationInfo = str(_int_mcc)
         _y_strBaseStationInfo = _y_strBaseStationInfo + '|' + str(_int_nmc)
         _y_strBaseStationInfo = _y_strBaseStationInfo + '|' + _hex_lac
