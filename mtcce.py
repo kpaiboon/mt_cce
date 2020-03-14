@@ -23,8 +23,10 @@ SOFTWARE.
 '''
 
 #MT CCE
+# Version 6
+# 2020-03-14 1. Minimal JSON
 # Version 5
-# 2020-03-20 1. shortinput <== Longinput 2. __autoSpeedforceIO 3. New ADC Hex <== Int 
+# 2020-03-12 1. shortinput <== Longinput 2. __autoSpeedforceIO 3. New ADC Hex <== Int 
 # Version 4
 # 2020-03-03 1. AAA <= CCE 2. mini decode verbose
 # Version 3
@@ -39,7 +41,7 @@ import binascii
 import json
 import uuid
 
-__code_version = 'mtcce.v5'
+__code_version = 'mtcce.v6'
 
 __autoSpeedforceIO = 5 #5km/h
 
@@ -63,8 +65,8 @@ Sampledathex = [
     ]
 
 Samplejson = [
-    #'{"c1b":{"x_00":{"dahex":"01","idhex":"05"},"x_01":{"dahex":"0A","idhex":"06"},"x_02":{"dahex":"00","idhex":"07"},"x_03":{"dahex":"00","idhex":"14"},"x_04":{"dahex":"02","idhex":"15"}},"c2b":{"x_00":{"dahex":"0000","idhex":"08"},"x_01":{"dahex":"1F01","idhex":"09"},"x_02":{"dahex":"0700","idhex":"0A"},"x_03":{"dahex":"2600","idhex":"0B"},"x_04":{"dahex":"0000","idhex":"16"},"x_05":{"dahex":"0000","idhex":"17"},"x_06":{"dahex":"A201","idhex":"19"},"x_07":{"dahex":"2605","idhex":"1A"},"x_08":{"dahex":"2300","idhex":"40"}},"c4b":{"x_00":{"dahex":"D7875701","idhex":"02"},"x_01":{"dahex":"4860CC06","idhex":"03"},"x_02":{"dahex":"DEBFB524","idhex":"04"},"x_03":{"dahex":"80680000","idhex":"0C"},"x_04":{"dahex":"E4A00300","idhex":"0D"},"x_05":{"dahex":"01000000","idhex":"1C"}},"nb":{"numnbytepkg":"1","x_00":{"dahex":"0401000000000000","idhex":"49","nlen":"9"}},"s_pkg_datalen":"84","s_pkg_numdatapkg":"21","s_pkg_partialhex":"54001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C010000000149090401000000000000","s_pkg_partialhexlen":"170","s_pkg_remaincontainhexlen":"1902"}'
-    '{"c1b":{"x_00":{"dahex":"01","idhex":"05"},"x_01":{"dahex":"0A","idhex":"06"},"x_02":{"dahex":"00","idhex":"07"},"x_03":{"dahex":"00","idhex":"14"},"x_04":{"dahex":"02","idhex":"15"}},"c2b":{"x_00":{"dahex":"0000","idhex":"08"},"x_01":{"dahex":"1F01","idhex":"09"},"x_02":{"dahex":"0700","idhex":"0A"},"x_03":{"dahex":"2600","idhex":"0B"},"x_04":{"dahex":"0000","idhex":"16"},"x_05":{"dahex":"0000","idhex":"17"},"x_06":{"dahex":"A201","idhex":"19"},"x_07":{"dahex":"2605","idhex":"1A"},"x_08":{"dahex":"2300","idhex":"40"}},"c4b":{"x_00":{"dahex":"D7875701","idhex":"02"},"x_01":{"dahex":"4860CC06","idhex":"03"},"x_02":{"dahex":"DEBFB524","idhex":"04"},"x_03":{"dahex":"80680000","idhex":"0C"},"x_04":{"dahex":"E4A00300","idhex":"0D"},"x_05":{"dahex":"01000000","idhex":"1C"}},"nb":{"x_00":{"dahex":"0401000000000000","idhex":"49","nlen":"9"}},"s_pkg_datalen":"84","s_pkg_numdatapkg":"21","s_pkg_partialhex":"54001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C010000000149090401000000000000","s_pkg_partialhexlen":"170","s_pkg_remaincontainhexlen":"1902"}'
+    #'{"1b":{"00":{"dh":"01","ih":"05"},"01":{"dh":"0A","ih":"06"},"02":{"dh":"00","ih":"07"},"03":{"dh":"00","ih":"14"},"04":{"dh":"02","ih":"15"}},"2b":{"00":{"dh":"0000","ih":"08"},"01":{"dh":"1F01","ih":"09"},"02":{"dh":"0700","ih":"0A"},"03":{"dh":"2600","ih":"0B"},"04":{"dh":"0000","ih":"16"},"05":{"dh":"0000","ih":"17"},"06":{"dh":"A201","ih":"19"},"07":{"dh":"2605","ih":"1A"},"08":{"dh":"2300","ih":"40"}},"4b":{"00":{"dh":"D7875701","ih":"02"},"01":{"dh":"4860CC06","ih":"03"},"02":{"dh":"DEBFB524","ih":"04"},"03":{"dh":"80680000","ih":"0C"},"04":{"dh":"E4A00300","ih":"0D"},"05":{"dh":"01000000","ih":"1C"}},"nb":{"numnbytepkg":"1","00":{"dh":"0401000000000000","ih":"49","sz":"9"}},"s_pkg_datalen":"84","s_pkg_numdatapkg":"21","s_pkg_partialhex":"54001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C010000000149090401000000000000","s_pkg_partialhexlen":"170","s_pkg_remaincontainhexlen":"1902"}'
+    '{"1b":{"00":{"dh":"01","ih":"05"},"01":{"dh":"0A","ih":"06"},"02":{"dh":"00","ih":"07"},"03":{"dh":"00","ih":"14"},"04":{"dh":"02","ih":"15"}},"2b":{"00":{"dh":"0000","ih":"08"},"01":{"dh":"1F01","ih":"09"},"02":{"dh":"0700","ih":"0A"},"03":{"dh":"2600","ih":"0B"},"04":{"dh":"0000","ih":"16"},"05":{"dh":"0000","ih":"17"},"06":{"dh":"A201","ih":"19"},"07":{"dh":"2605","ih":"1A"},"08":{"dh":"2300","ih":"40"}},"4b":{"00":{"dh":"D7875701","ih":"02"},"01":{"dh":"4860CC06","ih":"03"},"02":{"dh":"DEBFB524","ih":"04"},"03":{"dh":"80680000","ih":"0C"},"04":{"dh":"E4A00300","ih":"0D"},"05":{"dh":"01000000","ih":"1C"}},"nb":{"00":{"dh":"0401000000000000","ih":"49","sz":"9"}},"s_pkg_datalen":"84","s_pkg_numdatapkg":"21","s_pkg_partialhex":"54001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C010000000149090401000000000000","s_pkg_partialhexlen":"170","s_pkg_remaincontainhexlen":"1902"}'
     ]
 Samplecmd = [
     '$$k28,864507030181266,B25,60*1B',
@@ -238,22 +240,22 @@ def decode(datin,_verbose=False):
         _hexNum1byteID = xbytehex[(0*2):((0+1)*2)] # 1-byte
         _intNum1byteID = int.from_bytes(binascii.unhexlify(_hexNum1byteID),'little',signed=False)
 
-        _js['b'][_jskey]['c1b'] = {} # init nest dict
-        _js['b'][_jskey]['num_c1b'] = str(_intNum1byteID)
+        _js['b'][_jskey]['1b'] = {} # init nest dict
+        _js['b'][_jskey]['num_1b'] = str(_intNum1byteID)
         for _x in range(_intNum1byteID):
             _y= 1 + (_x*2)
-            _xidhex =  xbytehex[(_y*2):((_y+1)*2)] # 1-byte
+            _xih =  xbytehex[(_y*2):((_y+1)*2)] # 1-byte
             _y=_y+1
             _xrawhex = xbytehex[(_y*2):((_y+1)*2)] # 1-byte
                         
-            _jsy = 'x_{:02d}'.format(_x)
-            _js['b'][_jskey]['c1b'][_jsy] = {} # init nest dict            
-            _js['b'][_jskey]['c1b'][_jsy]['idhex'] = _xidhex
-            _js['b'][_jskey]['c1b'][_jsy]['dahex'] = _xrawhex
+            _jsy = '{:02d}'.format(_x)
+            _js['b'][_jskey]['1b'][_jsy] = {} # init nest dict            
+            _js['b'][_jskey]['1b'][_jsy]['ih'] = _xih
+            _js['b'][_jskey]['1b'][_jsy]['dh'] = _xrawhex
             
             if _verbose:
                 print('x',_x)
-                print('>>x-byte__xidhex',_xidhex,_xidhex)
+                print('>>x-byte__xih',_xih,_xih)
                 print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
                 
         remainxbytehex = xbytehex[( 1+ (_intNum1byteID*2))*2:]
@@ -270,22 +272,22 @@ def decode(datin,_verbose=False):
         _hexNum2byteID = xbytehex[(0*2):((0+1)*2)] # 1-byte
         _intNum2byteID = int.from_bytes(binascii.unhexlify(_hexNum2byteID),'little',signed=False)
         
-        _js['b'][_jskey]['c2b'] = {} # init nest dict
-        _js['b'][_jskey]['num_c2b'] = str(_intNum2byteID)
+        _js['b'][_jskey]['2b'] = {} # init nest dict
+        _js['b'][_jskey]['num_2b'] = str(_intNum2byteID)
         for _x in range(_intNum2byteID):
             _y= 1 + (_x*3)
-            _xidhex =  xbytehex[(_y*2):((_y+1)*2)] # 1-byte
+            _xih =  xbytehex[(_y*2):((_y+1)*2)] # 1-byte
             _y=_y+1
             _xrawhex = xbytehex[(_y*2):((_y+2)*2)] # 2-byte
             
-            _jsy = 'x_{:02d}'.format(_x)
-            _js['b'][_jskey]['c2b'][_jsy] = {} # init nest dict            
-            _js['b'][_jskey]['c2b'][_jsy]['idhex'] = _xidhex
-            _js['b'][_jskey]['c2b'][_jsy]['dahex'] = _xrawhex
+            _jsy = '{:02d}'.format(_x)
+            _js['b'][_jskey]['2b'][_jsy] = {} # init nest dict            
+            _js['b'][_jskey]['2b'][_jsy]['ih'] = _xih
+            _js['b'][_jskey]['2b'][_jsy]['dh'] = _xrawhex
             
             if _verbose:
                 print('x',_x)
-                print('>>x-byte__xidhex',_xidhex,_xidhex)
+                print('>>x-byte__xih',_xih,_xih)
                 print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
                 
         remainxbytehex = xbytehex[( 1+ (_intNum2byteID*3))*2:]
@@ -302,22 +304,22 @@ def decode(datin,_verbose=False):
         _hexNum4byteID = xbytehex[(0*2):((0+1)*2)] # 1-byte
         _intNum4byteID = int.from_bytes(binascii.unhexlify(_hexNum4byteID),'little',signed=False)
         
-        _js['b'][_jskey]['c4b'] = {} # init nest dict
-        _js['b'][_jskey]['num_c4b'] = str(_intNum4byteID)
+        _js['b'][_jskey]['4b'] = {} # init nest dict
+        _js['b'][_jskey]['num_4b'] = str(_intNum4byteID)
         for _x in range(_intNum4byteID):
             _y= 1 + (_x*5)
-            _xidhex =  xbytehex[(_y*2):((_y+1)*2)] # 1-byte
+            _xih =  xbytehex[(_y*2):((_y+1)*2)] # 1-byte
             _y=_y+1
             _xrawhex = xbytehex[(_y*2):((_y+4)*2)] # 4-byte
             
-            _jsy = 'x_{:02d}'.format(_x)
-            _js['b'][_jskey]['c4b'][_jsy] = {} # init nest dict            
-            _js['b'][_jskey]['c4b'][_jsy]['idhex'] = _xidhex
-            _js['b'][_jskey]['c4b'][_jsy]['dahex'] = _xrawhex
+            _jsy = '{:02d}'.format(_x)
+            _js['b'][_jskey]['4b'][_jsy] = {} # init nest dict            
+            _js['b'][_jskey]['4b'][_jsy]['ih'] = _xih
+            _js['b'][_jskey]['4b'][_jsy]['dh'] = _xrawhex
             
             if _verbose:
                 print('x',_x)
-                print('>>x-byte__xidhex',_xidhex,_xidhex)
+                print('>>x-byte__xih',_xih,_xih)
                 print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
                 
         remainxbytehex = xbytehex[( 1+ (_intNum4byteID*5))*2:]
@@ -362,7 +364,7 @@ def decode(datin,_verbose=False):
             
             xbytehex = remainxbytehex
             
-            _xidhex =  xbytehex[(1*2):((1+1)*2)] # 1-byte
+            _xih =  xbytehex[(1*2):((1+1)*2)] # 1-byte
             
             _hexNumNbyteID = xbytehex[(2*2):((2+1)*2)] # 1-byte
             _intNumNbyteID = int.from_bytes(binascii.unhexlify(_hexNumNbyteID),'little',signed=False)
@@ -372,18 +374,18 @@ def decode(datin,_verbose=False):
             
             remainxbytehex = xbytehex[(_y+_intNumNbyteID-1)*2:] # Need RAW TCP Checking Nbyte..Nbyte-1....Nbyte-2
 
-            _jsy = 'x_{:02d}'.format(_x)
+            _jsy = '{:02d}'.format(_x)
             _js['b'][_jskey]['nb'][_jsy] = {} # init nest dict
-            _js['b'][_jskey]['nb'][_jsy]['nlen'] = str(_intNumNbyteID)
-            _js['b'][_jskey]['nb'][_jsy]['idhex'] = _xidhex
-            _js['b'][_jskey]['nb'][_jsy]['dahex'] = _xrawhex
+            _js['b'][_jskey]['nb'][_jsy]['sz'] = str(_intNumNbyteID)
+            _js['b'][_jskey]['nb'][_jsy]['ih'] = _xih
+            _js['b'][_jskey]['nb'][_jsy]['dh'] = _xrawhex
 
             
             if _verbose:
                 print('>>x-byte_hexNumNbyteID',_hexNumNbyteID,_hexNumNbyteID)
                 print('>>x-byte_intNumNbyteID',_intNumNbyteID,_intNumNbyteID)
                 print('>>x-byte__len(xrawhex)',len(_xrawhex),len(_xrawhex))
-                print('>>x-byte__xidhex',_xidhex,_xidhex)
+                print('>>x-byte__xih',_xih,_xih)
                 print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
                 print('>>x-byte_len(xbytehex)',len(xbytehex))
                 print(xbytehex)
@@ -440,9 +442,9 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
 
 
     try:
-        _objc1b = _js['c1b']
-        _objc2b = _js['c2b']
-        _objc4b = _js['c4b']
+        _obj1b = _js['1b']
+        _obj2b = _js['2b']
+        _obj4b = _js['4b']
         _objnb = _js['nb']
     except KeyError as e:
         print(e)
@@ -450,37 +452,37 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         return ''
     
     if _verbose: 
-        print('_objc1b', len(_objc1b) , _objc1b)
-        print('_objc2b', len(_objc2b) , _objc2b)
-        print('_objc4b', len(_objc4b) , _objc4b)
+        print('_obj1b', len(_obj1b) , _obj1b)
+        print('_obj2b', len(_obj2b) , _obj2b)
+        print('_obj4b', len(_obj4b) , _obj4b)
         print('_objnb', len(_objnb) , _objnb)
     
     
-    # init var @ c1b
+    # init var @ 1b
     _v_u8GpsValid = 0
     _v_u8GpsNsat = 0
     _v_u8GsmStr = 0
     _v_hexOutput = '00'
     _v_hexInput = '00'
 
-    for _x in range(len(_objc1b)):
-        _kx = 'x_{:02d}'.format(_x)
-        _xidhex = _objc1b[_kx]['idhex']
-        _xrawhex = _objc1b[_kx]['dahex']
+    for _x in range(len(_obj1b)):
+        _kx = '{:02d}'.format(_x)
+        _xih = _obj1b[_kx]['ih']
+        _xrawhex = _obj1b[_kx]['dh']
         if _verbose: 
             print('_kx', len(_kx) , _kx)
-            print('_xidhex', len(_xidhex) , _xidhex)
+            print('_xih', len(_xih) , _xih)
             print('_xrawhex', len(_xrawhex) , _xrawhex)           
         
-        if _xidhex == '05':
+        if _xih == '05':
             _v_u8GpsValid = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '06':
+        elif _xih == '06':
             _v_u8GpsNsat= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '07':
+        elif _xih == '07':
             _v_u8GsmStr= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '14':
+        elif _xih == '14':
             _v_hexOutput= _xrawhex
-        elif _xidhex == '15':
+        elif _xih == '15':
             _v_hexinput= _xrawhex
             
     if _verbose:
@@ -491,7 +493,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_hexInput', _v_hexInput)
 
 
-    # init var @ c2b
+    # init var @ 2b
     _v_u16SpeedKMH = 0
     _v_u16Heading = 0
     _v_f32Hdop = 0.0
@@ -501,38 +503,42 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_u16HundredthAD3 = 0
     _v_u16HundredthAD4 = 0
     _v_u16HundredthAD5 = 0
+    _v_u16HundredthAD6 = 0
     _v_u16Eventcode = 0
     
 
-    for _x in range(len(_objc2b)):
-        _kx = 'x_{:02d}'.format(_x)
-        _xidhex = _objc2b[_kx]['idhex']
-        _xrawhex = _objc2b[_kx]['dahex']
+    for _x in range(len(_obj2b)):
+        _kx = '{:02d}'.format(_x)
+        _xih = _obj2b[_kx]['ih']
+        _xrawhex = _obj2b[_kx]['dh']
         if _verbose: 
             print('_kx', len(_kx) , _kx)
-            print('_xidhex', len(_xidhex) , _xidhex)
+            print('_xih', len(_xih) , _xih)
             print('_xrawhex', len(_xrawhex) , _xrawhex)           
         
-        if _xidhex == '08':
+        if _xih == '08':
             _v_u16SpeedKMH = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '09':
+        elif _xih == '09':
             _v_u16Heading= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '0A':
+        elif _xih == '0A':
             _v_f32Hdop= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/1
-        elif _xidhex == '1B':
+        elif _xih == '1B':
             _v_u16Alt= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '16':
+        elif _xih == '16':
             _v_u16HundredthAD1= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '17':
+        elif _xih == '17':
             _v_u16HundredthAD2= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '18':
+        elif _xih == '18':
             _v_u16HundredthAD3= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '19':
+        elif _xih == '19':
             _v_u16HundredthAD4= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '1A':
+        elif _xih == '1A':
             _v_u16HundredthAD5= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '40':
+        elif _xih == '40':
             _v_u16Eventcode= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+        elif _xih == '41':
+            _v_u16HundredthAD6= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)    
+        
             
     if _verbose:
         print('_v_u16SpeedKMH', _v_u16SpeedKMH)
@@ -544,44 +550,49 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_u16HundredthAD4', _v_u16HundredthAD3)
         print('_v_u16HundredthAD4', _v_u16HundredthAD4)
         print('_v_u16HundredthAD5', _v_u16HundredthAD5)
+        print('_v_u16HundredthAD6', _v_u16HundredthAD6)
         print('_v_u16Eventcode', _v_u16Eventcode)   
 
-    # init var @ c4b
+    # init var @ 4b
     _v_f32Lt = 0.0
     _v_f32Ln = 0.0
     _v_u32TimeSecSince2000 = 0
-    _v_strGpsUTCyymmddHHMMSS = ''
+    _v_strGpsUTCyymmdHMMSS = ''
     _v_u32Mileage = 0
     _v_u32RunTimeSec = 0
     _v_u32SysFlags = 0
+    _v_hexSysFlags = ''
     _v_hexWordInput = 'FF563412' # use FF as legacy input eg. 04
     
-    for _x in range(len(_objc4b)):
-        _kx = 'x_{:02d}'.format(_x)
-        _xidhex = _objc4b[_kx]['idhex']
-        _xrawhex = _objc4b[_kx]['dahex']
+    for _x in range(len(_obj4b)):
+        _kx = '{:02d}'.format(_x)
+        _xih = _obj4b[_kx]['ih']
+        _xrawhex = _obj4b[_kx]['dh']
         if _verbose: 
             print('_kx', len(_kx) , _kx)
-            print('_xidhex', len(_xidhex) , _xidhex)
+            print('_xih', len(_xih) , _xih)
             print('_xrawhex', len(_xrawhex) , _xrawhex)           
         
-        if _xidhex == '02':
+        if _xih == '02':
             _v_f32Lt = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/1000000
-        elif _xidhex == '03':
+        elif _xih == '03':
             _v_f32Ln= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/1000000
-        elif _xidhex == '04':
+        elif _xih == '04':
             _v_u32TimeSecSince2000= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
             
             _time = time.gmtime(_v_u32TimeSecSince2000 + 946684800) #615890910 + (Since2000), Where January 1, 2000 UNIX time is 946684800.
-            _v_strGpsUTCyymmddHHMMSS = time.strftime("%y%m%d%H%M%S",_time)
+            _v_strGpsUTCyymmdHMMSS = time.strftime("%y%m%d%H%M%S",_time)
             
-        elif _xidhex == '0C':
+        elif _xih == '0C':
             _v_u32Mileage = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '0D':
+        elif _xih == '0D':
             _v_u32RunTimeSec = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
-        elif _xidhex == '1C':
-            _v_u32SysFlags = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)           
-        elif _xidhex == '42':
+        elif _xih == '1C':
+            _v_u32SysFlags = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+            # reverse-hex
+            _v_hexSysFlags = hex(_v_u32SysFlags)[2:].upper() # hex(x)[2:] use hex() without 0x get the first two characters removed
+            
+        elif _xih == '42':
             _v_hexWordInput = _xrawhex
             _v_hexInput = _v_hexWordInput[0:2]
             
@@ -591,9 +602,10 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_f32Lt', _v_f32Lt)
         print('_v_f32Ln', _v_f32Ln)
         print('_v_u32TimeSecSince2000', _v_u32TimeSecSince2000)
-        print('_v_strGpsUTCyymmddHHMMSS', _v_strGpsUTCyymmddHHMMSS)
+        print('_v_strGpsUTCyymmdHMMSS', _v_strGpsUTCyymmdHMMSS)
         print('_v_u32Mileage', _v_u32Mileage)
         print('_v_u32RunTimeSec', _v_u32RunTimeSec)
+        print('_v_hexSysFlags', _v_hexSysFlags)  
         print('_v_u32SysFlags', _v_u32SysFlags)
         print('_v_hexWordInput', _v_hexWordInput)
         print('Final _v_hexInput', _v_hexInput)
@@ -604,18 +616,18 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_cOE_hexMccNmc = ''
 
     for _x in range(len(_objnb)):
-        _kx = 'x_{:02d}'.format(_x)
-        _xidhex = _objnb[_kx]['idhex']
-        _xrawhex = _objnb[_kx]['dahex']
+        _kx = '{:02d}'.format(_x)
+        _xih = _objnb[_kx]['ih']
+        _xrawhex = _objnb[_kx]['dh']
         if _verbose: 
             print('_kx', len(_kx) , _kx)
-            print('_xidhex', len(_xidhex) , _xidhex)
+            print('_xih', len(_xih) , _xih)
             print('_xrawhex', len(_xrawhex) , _xrawhex)           
         
-        if _xidhex == '39':
+        if _xih == '39':
             _v_c39_hexCard = _xrawhex
             _v_c39_strCard = str(binascii.unhexlify(_xrawhex))
-        elif _xidhex == '0E':
+        elif _xih == '0E':
             _v_cOE_hexMccNmc = _xrawhex
             
     if _verbose:
@@ -645,7 +657,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     # _v_f32Lt 22.513623
     # _v_f32Ln 114.057288
     # _v_u32TimeSecSince2000 615890910
-    # _v_strGpsUTCyymmddHHMMSS 190708084830
+    # _v_strGpsUTCyymmdHMMSS 190708084830
     # _v_u32Mileage 26752
     # _v_u32RunTimeSec 237796
     # _v_u32SysFlags 1
@@ -659,30 +671,51 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     if _v_u8GpsValid !=0 :
         _y_GpsValid = 'A'
     
-    _y_strBaseStationInfo = '520|15|17F3|01132F0B'
-
-
+    
+    _y_strBaseStationInfo = '0|0|0000|00000000'
+    if len(_v_cOE_hexMccNmc) >= 22:
+        _int_mcc = int.from_bytes(binascii.unhexlify(_v_cOE_hexMccNmc[0:(2*2)]),'little',signed=False)
+        _int_nmc = int.from_bytes(binascii.unhexlify(_v_cOE_hexMccNmc[(2*2):(4*2)]),'little',signed=False)
+        _int_lac = int.from_bytes(binascii.unhexlify(_v_cOE_hexMccNmc[(4*2):(6*2)]),'little',signed=False)
+        _hex_lac = hex(_int_lac)[2:].upper() # hex(x)[2:] use hex() without 0x get the first two characters removed
+        _int_cid = int.from_bytes(binascii.unhexlify(_v_cOE_hexMccNmc[(6*2):(10*2)]),'little',signed=False)
+        _hex_cid = hex(_int_cid)[2:].upper() # hex(x)[2:] use hex() without 0x get the first two characters removed
+        _int_rxl = int.from_bytes(binascii.unhexlify(_v_cOE_hexMccNmc[(10*2):]),'little',signed=True)
+        _y_strBaseStationInfo = str(_int_mcc)
+        _y_strBaseStationInfo = _y_strBaseStationInfo + '|' + str(_int_nmc)
+        _y_strBaseStationInfo = _y_strBaseStationInfo + '|' + _hex_lac
+        _y_strBaseStationInfo = _y_strBaseStationInfo + '|' + _hex_cid
+        _y_strBaseStationInfo = _y_strBaseStationInfo + '|' + str(_int_rxl)
+        
     _v_hexLegacyIO = '1F1F'
     _v_hexLegacyIO = _v_hexInput + _v_hexOutput
-    
+
+    #debug-case:  _v_u32SysFlags bit 1 <== 0000 00x0 where: x == 1 or 0x02
+    #_v_u32SysFlags = 0x02 # ACC On
+    #_v_u32SysFlags = 0x01 # Unknow
+    #_v_hexLegacyIO = '100F'
+    if not ((_v_u32SysFlags & 0x02) == 0):
+        _int_big_v_hexLegacyIO = int.from_bytes(binascii.unhexlify(_v_hexLegacyIO),'big',signed=False)
+        #print('_int_big_v_hexLegacyIO', _int_big_v_hexLegacyIO) #debug-geninfo
+        _int_big_v_hexLegacyIO = _int_big_v_hexLegacyIO | int('0x0400',16)
+        #print('_int_big_v_hexLegacyIO', _int_big_v_hexLegacyIO) #debug-geninfo
+        _v_hexLegacyIO = hex(_int_big_v_hexLegacyIO)[2:].upper() # hex(x)[2:] use hex() without 0x get the first two characters removed
+        #print('_v_hexLegacyIO', _v_hexLegacyIO) #debug-geninfo
+
+        if _verbose:
+            print('Override ACC=On <== System flag 0x02')
+            print('Final _v_hexLegacyIO', _v_hexLegacyIO)
+
     #debug-case:  autoSpeedforceIO
     #_v_u16SpeedKMH = 99
     #_v_hexLegacyIO = '100F'
-    
     if _v_u16SpeedKMH > __autoSpeedforceIO:
-        _int_big_v_hexLegacyIO = int.from_bytes(binascii.unhexlify(_v_hexLegacyIO),'big',signed=False)
-        
+        _int_big_v_hexLegacyIO = int.from_bytes(binascii.unhexlify(_v_hexLegacyIO),'big',signed=False)        
         #print('_int_big_v_hexLegacyIO', _int_big_v_hexLegacyIO) #debug-geninfo
-        
         _int_big_v_hexLegacyIO = _int_big_v_hexLegacyIO | int('0x0400',16)
-        
         #print('_int_big_v_hexLegacyIO', _int_big_v_hexLegacyIO) #debug-geninfo
-        
-        _v_hexLegacyIO = hex(_int_big_v_hexLegacyIO)[2:] # hex(x)[2:] use hex() without 0x get the first two characters removed
-        _v_hexLegacyIO = _v_hexLegacyIO.upper()
-        
-        #print('_v_hexLegacyIO', _v_hexLegacyIO) #debug-geninfo
-        
+        _v_hexLegacyIO = hex(_int_big_v_hexLegacyIO)[2:].upper() # hex(x)[2:] use hex() without 0x get the first two characters removed
+        #print('_v_hexLegacyIO', _v_hexLegacyIO) #debug-geninfo        
         
         if _verbose:
             print('Override ACC=On <== speeding over xx kmh')
@@ -697,6 +730,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _y_adcnew = _y_adcnew + '|' + hex(_v_u16HundredthAD3)[2:].upper()
     _y_adcnew = _y_adcnew + '|' + hex(_v_u16HundredthAD4)[2:].upper()
     _y_adcnew = _y_adcnew + '|' + hex(_v_u16HundredthAD5)[2:].upper()
+    _y_adcnew = _y_adcnew + '|' + hex(_v_u16HundredthAD6)[2:].upper()
     
     _y_rfid = 'rfid'
     if len(_v_c39_strCard) >10:
@@ -720,7 +754,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     pt="$$"
        
     pt= pt + _x_strDataID + _y_datalen + ','+ _x_strImei + ',' + 'AAA' + ',' + str(_v_u16Eventcode) + ','    # $$<Data identifier><Data length><IMEI>AAA<Event code>
-    pt= pt + str(_v_f32Lt)+','+ str(_v_f32Ln) + ',' + _v_strGpsUTCyymmddHHMMSS + ',' + _y_GpsValid + ','    # <Latitude><Longitude><Date and time><Positioning status>
+    pt= pt + str(_v_f32Lt)+','+ str(_v_f32Ln) + ',' + _v_strGpsUTCyymmdHMMSS + ',' + _y_GpsValid + ','    # <Latitude><Longitude><Date and time><Positioning status>
     pt= pt + str(_v_u8GpsNsat) +',' + str(_v_u8GsmStr) +',' + str(_v_u16SpeedKMH) +',' + str(_v_u16Heading) +','    # <Number of satellites><GSM signal strength><Speed><Direction>
     pt= pt + str(_v_f32Hdop) +',' + str(_v_u16Alt) +',' + str(_v_u32Mileage) +',' + str(_v_u32RunTimeSec) +','    # <Horizontal dilution of precision(HDOP)><Altitude><Mileage><Total time>
     pt= pt + _y_strBaseStationInfo +',' + _y_iost +',' + _y_adcnew +',' + _y_rfid +','    # <Base station info><I/O port status><Analog input value><Assisted event info or RFID>
@@ -856,8 +890,8 @@ def main():
     timetup = time.strftime("%d/%m/%Y, %H:%M:%S",_time)
     print('timetup',timetup)
     
-    _t_gps_yymmddHHMMSS = time.strftime("%y%m%d%H%M%S",_time)
-    print('_t_gps_yymmddHHMMSS',_t_gps_yymmddHHMMSS)
+    _t_gps_yymmdHMMSS = time.strftime("%y%m%d%H%M%S",_time)
+    print('_t_gps_yymmdHMMSS',_t_gps_yymmdHMMSS)
 
 
 if __name__=='__main__':
