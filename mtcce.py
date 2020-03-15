@@ -23,6 +23,8 @@ SOFTWARE.
 '''
 
 #MT CCE
+# Version 7
+# 2020-03-15 1. Altitude Fix code 0x0B 2. del _cce_ofsbyte
 # Version 6
 # 2020-03-14 1. Minimal JSON
 # Version 5
@@ -41,7 +43,7 @@ import binascii
 import json
 import uuid
 
-__code_version = 'mtcce.v6'
+__code_version = 'mtcce.v7'
 
 __autoSpeedforceIO = 5 #5km/h
 
@@ -80,9 +82,8 @@ Samplecmd = [
 def decode(datin,_verbose=False):
     
     _this_limit_for_numpkg = 100
-    _cce_ofsbyte = 0
     
-    datret =""
+    datret =''
     if _verbose:
         print(__code_version)
 
@@ -180,11 +181,9 @@ def decode(datin,_verbose=False):
     
     if _verbose:
         print('>>Header-2_intRemainBuffer')
-        print('_hexRemainBuffer', len(_hexRemainBuffer), _hexRemainBuffer)
-        print('_intRemainBuffer', _intRemainBuffer, _intRemainBuffer)
+        print('_hexRemainBuffer', len(_hexRemainBuffer), _hexRemainBuffer, _intRemainBuffer)
         print('>>Header-2_intNumSmallPkg')
-        print('_hexNumSmallPkg', len(_hexNumSmallPkg), _hexNumSmallPkg)
-        print('_intNumSmallPkg', _intNumSmallPkg, _intNumSmallPkg)
+        print('_hexNumSmallPkg', len(_hexNumSmallPkg), _hexNumSmallPkg, _intNumSmallPkg)
    
 
     fullcontainhex = rawhex[((_cce_ofs+4+2)*2):]
@@ -255,17 +254,14 @@ def decode(datin,_verbose=False):
             
             if _verbose:
                 print('x',_x)
-                print('>>x-byte__xidhex',_xih,_xih)
-                print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
+                print('>>x-byte__xidhex',len(_xih),_xih)
+                print('>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
                 
         remainxbytehex = xbytehex[( 1+ (_intNum1byteID*2))*2:]
         if _verbose:
-            print('>>x-byte_hexNum1byteID',_hexNum1byteID,_hexNum1byteID)
-            print('>>x-byte_intNum1byteID',_intNum1byteID,_intNum1byteID)
-            print('>>x-byte_len(xbytehex)',len(xbytehex))
-            print(xbytehex)
-            print('>>x-byte_len(remainxbytehex)',len(remainxbytehex))
-            print(remainxbytehex)
+            print('>>x-byte_hexNum1byteID',len(_hexNum1byteID), _hexNum1byteID, _intNum1byteID)
+            print('>>x-byte__xbytehex',len(xbytehex), xbytehex)
+            print('>>x-byte__remainxbytehex',len(remainxbytehex),remainxbytehex)            
         
         xbytehex = remainxbytehex
         
@@ -287,17 +283,14 @@ def decode(datin,_verbose=False):
             
             if _verbose:
                 print('x',_x)
-                print('>>x-byte__xidhex',_xih,_xih)
-                print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
+                print('>>x-byte__xidhex',len(_xih),_xih)
+                print('>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
                 
         remainxbytehex = xbytehex[( 1+ (_intNum2byteID*3))*2:]
         if _verbose:
-            print('>>x-byte_hexNum2byteID',_hexNum2byteID,_hexNum2byteID)
-            print('>>x-byte_intNum2byteID',_intNum2byteID,_intNum2byteID)
-            print('>>x-byte_len(xbytehex)',len(xbytehex))
-            print(xbytehex)
-            print('>>x-byte_len(remainxbytehex)',len(remainxbytehex))
-            print(remainxbytehex)
+            print('>>x-byte_hexNum2byteID',len(_hexNum2byteID), _hexNum2byteID, _intNum2byteID)
+            print('>>x-byte__xbytehex',len(xbytehex), xbytehex)
+            print('>>x-byte__remainxbytehex',len(remainxbytehex),remainxbytehex)     
         
         xbytehex = remainxbytehex
         
@@ -319,17 +312,14 @@ def decode(datin,_verbose=False):
             
             if _verbose:
                 print('x',_x)
-                print('>>x-byte__xidhex',_xih,_xih)
-                print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
+                print('>>x-byte__xidhex',len(_xih),_xih)
+                print('>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
                 
         remainxbytehex = xbytehex[( 1+ (_intNum4byteID*5))*2:]
         if _verbose:
-            print('>>x-byte_hexNum4byteID',_hexNum4byteID,_hexNum4byteID)
-            print('>>x-byte_intNum4byteID',_intNum4byteID,_intNum4byteID)
-            print('>>x-byte_len(xbytehex)',len(xbytehex))
-            print(xbytehex)
-            print('>>x-byte_len(remainxbytehex)',len(remainxbytehex))
-            print(remainxbytehex)        
+            print('>>x-byte_hexNum4byteID',len(_hexNum4byteID), _hexNum4byteID, _intNum4byteID)
+            print('>>x-byte__xbytehex',len(xbytehex), xbytehex)
+            print('>>x-byte__remainxbytehex',len(remainxbytehex),remainxbytehex)    
         
         if len(remainxbytehex) > 3: # fix bug nbyte >3
             _hexNumNBytePkg =  remainxbytehex[(0*2):((0+1)*2)] # 1-byte
@@ -346,10 +336,12 @@ def decode(datin,_verbose=False):
 
         if _verbose:
             print('>>Nbyte_remainxbytehex')
-            print(remainxbytehex)
-            print('>>Nbyte_Loop for _intNumNBytePkg:')
-            print(_intNumNBytePkg)
+            print('remainxbytehex', len(remainxbytehex), remainxbytehex)
+            print('>>Nbyte_Loop for _intNumNBytePkg:', _intNumNBytePkg)
+
         
+        _js['h3_NumNBytePkg'] = str(_intNumNBytePkg)
+            
         if _intNumNBytePkg >  _this_limit_for_numpkg:
             return ''
         
@@ -382,15 +374,13 @@ def decode(datin,_verbose=False):
 
             
             if _verbose:
-                print('>>x-byte_hexNumNbyteID',_hexNumNbyteID,_hexNumNbyteID)
-                print('>>x-byte_intNumNbyteID',_intNumNbyteID,_intNumNbyteID)
-                print('>>x-byte__len(xrawhex)',len(_xrawhex),len(_xrawhex))
-                print('>>x-byte__xidhex',_xih,_xih)
-                print('>>x-byte__xrawhex',_xrawhex,_xrawhex)
-                print('>>x-byte_len(xbytehex)',len(xbytehex))
-                print(xbytehex)
-                print('>>x-byte_len(remainxbytehex)',len(remainxbytehex))
-                print(remainxbytehex)
+                print('x',_x)
+                print('>>x-byte__xidhex',len(_xih),_xih)
+                print('>>x-byte__xrawhex',len(_xrawhex),_xrawhex)                
+                print('>>x-byte_hexNumNbyteID',len(_hexNumNbyteID), _hexNumNbyteID, _intNumNbyteID)
+                print('>>x-byte__xbytehex',len(xbytehex), xbytehex)
+                print('>>x-byte__remainxbytehex',len(remainxbytehex),remainxbytehex)
+
 
     # Last func
     _js['in_rawhex'] = rawhex
@@ -504,6 +494,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_u16HundredthAD4 = 0
     _v_u16HundredthAD5 = 0
     _v_u16HundredthAD6 = 0
+    _v_u16HundredthFuelPercentage = 0
     _v_u16Eventcode = 0
     
 
@@ -522,7 +513,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
             _v_u16Heading= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xih == '0A':
             _v_f32Hdop= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/1
-        elif _xih == '1B':
+        elif _xih == '0B':
             _v_u16Alt= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xih == '16':
             _v_u16HundredthAD1= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
@@ -534,6 +525,8 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
             _v_u16HundredthAD4= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xih == '1A':
             _v_u16HundredthAD5= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+        elif _xih == '29':
+            _v_u16HundredthFuelPercentage= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)            
         elif _xih == '40':
             _v_u16Eventcode= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xih == '41':
@@ -670,7 +663,8 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _y_GpsValid = 'V'
     if _v_u8GpsValid !=0 :
         _y_GpsValid = 'A'
-    
+
+    _y_strFuelPerc = hex(_v_u16HundredthFuelPercentage)[2:].upper() # hex(x)[2:] use hex() without 0x get the first two characters removed
     
     _y_strBaseStationInfo = '0|0|0000|00000000'
     if len(_v_cOE_hexMccNmc) >= 22:
@@ -758,7 +752,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     pt= pt + str(_v_u8GpsNsat) +',' + str(_v_u8GsmStr) +',' + str(_v_u16SpeedKMH) +',' + str(_v_u16Heading) +','    # <Number of satellites><GSM signal strength><Speed><Direction>
     pt= pt + str(_v_f32Hdop) +',' + str(_v_u16Alt) +',' + str(_v_u32Mileage) +',' + str(_v_u32RunTimeSec) +','    # <Horizontal dilution of precision(HDOP)><Altitude><Mileage><Total time>
     pt= pt + _y_strBaseStationInfo +',' + _y_iost +',' + _y_adcnew +',' + _y_rfid +','    # <Base station info><I/O port status><Analog input value><Assisted event info or RFID>
-    pt= pt + 'alm'  +',' + '108' +',' + '0' +',' + '0' +','    # <Customized data><Extended protocol version 108><Fuel percentage><Temperature sensor No. + Temperature value>
+    pt= pt + 'alm'  +',' + '108' +',' + _y_strFuelPerc +',' + '0' +','    # <Customized data><Extended protocol version 108><Fuel percentage><Temperature sensor No. + Temperature value>
     pt= pt + '0' +',' + '0' +',' + '0' +',' + '0' +','    # <Data N>
     pt= pt +'*FF\r\n' # <*Checksum>\r\n
 
@@ -773,7 +767,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
 
 
 def proto2msg(datin,_verbose=False):
-    datret = ""
+    datret = ''
     _data= str(decode(datin,_verbose))
     
     #print(str(binascii.hexlify(datin)).upper())
@@ -831,7 +825,7 @@ def proto2msg(datin,_verbose=False):
     
     
 def cmd2proto(datin,_verbose=False):
-    datret =""
+    datret =''
     if _verbose:
         print(__code_version)
         print(datin)
