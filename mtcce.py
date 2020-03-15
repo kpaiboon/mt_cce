@@ -24,7 +24,7 @@ SOFTWARE.
 
 #MT CCE
 # Version 7
-# 2020-03-15 1. Altitude Fix code 0x0B 2. del _cce_ofsbyte
+# 2020-03-15 1. Altitude Fix code 0x0B 2. del _cce_ofsbyte 3. add fuel percent
 # Version 6
 # 2020-03-14 1. Minimal JSON
 # Version 5
@@ -544,6 +544,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_u16HundredthAD4', _v_u16HundredthAD4)
         print('_v_u16HundredthAD5', _v_u16HundredthAD5)
         print('_v_u16HundredthAD6', _v_u16HundredthAD6)
+        print('_v_u16HundredthFuelPercentage', _v_u16HundredthFuelPercentage)
         print('_v_u16Eventcode', _v_u16Eventcode)   
 
     # init var @ 4b
