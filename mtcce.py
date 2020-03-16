@@ -462,9 +462,12 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         if _verbose: 
             print('_kx', len(_kx) , _kx)
             print('_xidhex', len(_xih) , _xih)
-            print('_xrawhex', len(_xrawhex) , _xrawhex)           
-        
-        if _xih == '05':
+            print('_xrawhex', len(_xrawhex) , _xrawhex)
+            
+        if _xih == '01':
+            #share 1byte ( Code 01: T633L ) and 2byte ( Code 40: MDVR )
+            _v_u16Eventcode_share_1b2b= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)           
+        elif _xih == '05':
             _v_u8GpsValid = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xih == '06':
             _v_u8GpsNsat= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
@@ -474,6 +477,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
             _v_hexOutput= _xrawhex
         elif _xih == '15':
             _v_hexinput= _xrawhex
+         
             
     if _verbose:
         print('_v_u8GpsValid', _v_u8GpsValid)
@@ -495,7 +499,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_u16HundredthAD5 = 0
     _v_u16HundredthAD6 = 0
     _v_u16HundredthFuelPercentage = 0
-    _v_u16Eventcode = 0
+    _v_u16Eventcode_share_1b2b = 0
     
 
     for _x in range(len(_obj2b)):
@@ -528,7 +532,8 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         elif _xih == '29':
             _v_u16HundredthFuelPercentage= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)            
         elif _xih == '40':
-            _v_u16Eventcode= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
+            #share 1byte ( Code 01: T633L ) and 2byte ( Code 40: MDVR )
+            _v_u16Eventcode_share_1b2b= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
         elif _xih == '41':
             _v_u16HundredthAD6= int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)    
         
@@ -545,7 +550,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_u16HundredthAD5', _v_u16HundredthAD5)
         print('_v_u16HundredthAD6', _v_u16HundredthAD6)
         print('_v_u16HundredthFuelPercentage', _v_u16HundredthFuelPercentage)
-        print('_v_u16Eventcode', _v_u16Eventcode)   
+        print('_v_u16Eventcode_share_1b2b', _v_u16Eventcode_share_1b2b)   
 
     # init var @ 4b
     _v_f32Lt = 0.0
@@ -734,21 +739,21 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _v_c39_strCard = _v_c39_strCard.replace('\'', '')
         _v_c39_strCard = _v_c39_strCard.replace('\\r\\n', '\r')
         _y_rfid = _v_c39_strCard
-        _v_u16Eventcode = '37' # force '37' log in/out
+        _v_u16Eventcode_share_1b2b = '37' # force '37' log in/out
         
         
-    if _v_u16Eventcode == 0:
+    if _v_u16Eventcode_share_1b2b == 0:
         # do process
-        _v_u16Eventcode = '35' # force '35' standard
+        _v_u16Eventcode_share_1b2b = '35' # force '35' standard
         
     if _verbose:
-        print('Final _v_u16Eventcode', _v_u16Eventcode)
+        print('Final _v_u16Eventcode_share_1b2b', _v_u16Eventcode_share_1b2b)
         print('Final _v_hexLegacyIO', _v_hexLegacyIO)
 
     
     pt="$$"
        
-    pt= pt + _x_strDataID + _y_datalen + ','+ _x_strImei + ',' + 'AAA' + ',' + str(_v_u16Eventcode) + ','    # $$<Data identifier><Data length><IMEI>AAA<Event code>
+    pt= pt + _x_strDataID + _y_datalen + ','+ _x_strImei + ',' + 'AAA' + ',' + str(_v_u16Eventcode_share_1b2b) + ','    # $$<Data identifier><Data length><IMEI>AAA<Event code>
     pt= pt + str(_v_f32Lt)+','+ str(_v_f32Ln) + ',' + _v_strGpsUTCyymmdHMMSS + ',' + _y_GpsValid + ','    # <Latitude><Longitude><Date and time><Positioning status>
     pt= pt + str(_v_u8GpsNsat) +',' + str(_v_u8GsmStr) +',' + str(_v_u16SpeedKMH) +',' + str(_v_u16Heading) +','    # <Number of satellites><GSM signal strength><Speed><Direction>
     pt= pt + str(_v_f32Hdop) +',' + str(_v_u16Alt) +',' + str(_v_u32Mileage) +',' + str(_v_u32RunTimeSec) +','    # <Horizontal dilution of precision(HDOP)><Altitude><Mileage><Total time>
