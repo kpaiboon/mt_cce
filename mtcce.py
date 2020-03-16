@@ -447,6 +447,8 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_obj4b', len(_obj4b) , _obj4b)
         print('_objnb', len(_objnb) , _objnb)
     
+    # init var @ 1b-2b shared
+    _v_u16Eventcode_share_1b2b = 0
     
     # init var @ 1b
     _v_u8GpsValid = 0
@@ -485,6 +487,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_u8GsmStr', _v_u8GsmStr)
         print('_v_hexOutput', _v_hexOutput)
         print('_v_hexInput', _v_hexInput)
+        print('_v_u16Eventcode_share_1b2b', _v_u16Eventcode_share_1b2b)   
 
 
     # init var @ 2b
@@ -499,7 +502,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_u16HundredthAD5 = 0
     _v_u16HundredthAD6 = 0
     _v_u16HundredthFuelPercentage = 0
-    _v_u16Eventcode_share_1b2b = 0
+
     
 
     for _x in range(len(_obj2b)):
