@@ -23,6 +23,8 @@ SOFTWARE.
 '''
 
 #MT CCE
+# Version 8
+# 2020-03-16 1. EventCode share 1byte ( Code 01: T633L ) and 2byte ( Code 40: MDVR )
 # Version 7
 # 2020-03-15 1. Altitude Fix code 0x0B 2. del _cce_ofsbyte 3. add fuel percent
 # Version 6
