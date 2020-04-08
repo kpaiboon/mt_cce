@@ -990,5 +990,23 @@ FE 2B 0B 00 00 00 00 00 00 00 00 00 00 00 ---> rotation sensor      <-- N-byte t
 2A 41 45 0D 0A 
 
 
+###This only program for  <-- N-byte type 1
+###todo  <-- N-byte type 1 and  <-- N-byte type 2
+>>Nbyte_remainxbytehex
+remainxbytehex 56 020E0C080205008000059BAB000000FE2B0B00000000000000000000
+>>Nbyte_Loop for _intNumNBytePkg: 2
+x 0
+>>x-byte__xidhex 2 0E
+>>x-byte__xrawhex 24 080205008000059BAB000000
+>>x-byte_hexNumNbyteID 2 0C 12
+>>x-byte__xbytehex 56 020E0C080205008000059BAB000000FE2B0B00000000000000000000
+>>x-byte__remainxbytehex 28 00FE2B0B00000000000000000000
+x 1
+>>x-byte__xidhex 2 FE
+>>x-byte__xrawhex 22 0B00000000000000000000
+>>x-byte_hexNumNbyteID 2 2B 43
+>>x-byte__xbytehex 28 00FE2B0B00000000000000000000
+>>x-byte__remainxbytehex 0
+
 
 '''
