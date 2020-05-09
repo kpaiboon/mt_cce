@@ -24,7 +24,7 @@ SOFTWARE.
 
 #MT CCE
 # Version 9
-# 2020-05-08 1. 2N-Byte Sampledathex2Nb
+# 2020-05-08 1. 2N-Byte Sampledathex2Nb 2. FE 2E : FWD_REV_SENS 3. Temperature , PhotoName
 # Version 8
 # 2020-03-16 1. EventCode share 1byte ( Code 01: T633L ) and 2byte ( Code 40: MDVR )
 # Version 7
@@ -635,7 +635,18 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_c39_hexCard = ''
     _v_c39_strCard = ''
     _v_cOE_hexMccNmc = ''
-
+    _v_cFE2B_hexFwdRevSen = ''
+    _v_c28_strPhotoName = ''
+    _v_c2A_hexTemp1 = ''
+    _v_c2B_hexTemp2 = ''
+    _v_c2C_hexTemp3 = ''
+    _v_c2D_hexTemp4 = ''
+    
+    _v_c2E_hexTemp5 = ''
+    _v_c2F_hexTemp6 = ''
+    _v_c30_hexTemp7 = ''
+    _v_c31_hexTemp8 = ''
+    
     for _x in range(len(_objnb)):
         _kx = '{:02d}'.format(_x)
         _xih = _objnb[_kx]['ih']
@@ -650,12 +661,41 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
             _v_c39_strCard = str(binascii.unhexlify(_xrawhex))
         elif _xih == '0E':
             _v_cOE_hexMccNmc = _xrawhex
+        elif _xih == 'FE2B':
+            _v_cFE2B_hexFwdRevSen = _xrawhex
+        elif _xih == '28':
+            _v_c28_strPhotoName = str(binascii.unhexlify(_xrawhex))
+        elif _xih == '2A':
+            _v_c2A_hexTemp1 = _xrawhex
+        elif _xih == '2B':
+            _v_c2B_hexTemp2 = _xrawhex
+        elif _xih == '2C':
+            _v_c2C_hexTemp3 = _xrawhex
+        elif _xih == '2D':
+            _v_c2D_hexTemp4 = _xrawhex
+        elif _xih == '2E':
+            _v_c2E_hexTemp5 = _xrawhex
+        elif _xih == '2F':
+            _v_c2F_hexTemp6 = _xrawhex
+        elif _xih == '30':
+            _v_c30_hexTemp7 = _xrawhex
+        elif _xih == '31':
+            _v_c31_hexTemp8 = _xrawhex              
             
     if _verbose:
         print('_v_c39_hexCard', _v_c39_hexCard)
         print('_v_c39_strCard', _v_c39_strCard)
         print('_v_cOE_hexMccNmc', _v_cOE_hexMccNmc)
-
+        print('_v_cFE2B_hexFwdRevSen', _v_cFE2B_hexFwdRevSen)
+        print('_v_c28_strPhotoName', _v_c28_strPhotoName)
+        print('_v_c2A_hexTemp1', _v_c2A_hexTemp1)
+        print('_v_c2B_hexTemp2', _v_c2B_hexTemp2)
+        print('_v_c2C_hexTemp3', _v_c2C_hexTemp3)
+        print('_v_c2D_hexTemp4', _v_c2D_hexTemp4)
+        print('_v_c2E_hexTemp5', _v_c2E_hexTemp5)
+        print('_v_c2F_hexTemp6', _v_c2F_hexTemp6)
+        print('_v_c30_hexTemp7', _v_c30_hexTemp7)
+        print('_v_c31_hexTemp8', _v_c31_hexTemp8)
 
     
     #Encode
