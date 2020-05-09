@@ -23,6 +23,8 @@ SOFTWARE.
 '''
 
 #MT CCE
+# Version 9
+# 2020-05-08 1. 2N-Byte Sampledathex2Nb 2. FE 2E : FWD_REV_SENS 3. Temperature , PhotoName
 # Version 8
 # 2020-03-16 1. EventCode share 1byte ( Code 01: T633L ) and 2byte ( Code 40: MDVR )
 # Version 7
@@ -45,7 +47,7 @@ import binascii
 import json
 import uuid
 
-__code_version = 'mtcce.v7'
+__code_version = 'mtcce.v9'
 
 __autoSpeedforceIO = 5 #5km/h
 
@@ -57,6 +59,12 @@ Sampledathex = [
     '2424643239312C3836343339343034303031373732372C4343452C0000000001000101190006012505010609071F14001B000B0803000957000A09000B000016000017000018000019A1011A7309290000410000060278D9D3000334DDFF05046895FC250C5CCC00000DAE7306004204000000020E0C08020500800004A59C00000039712520205E44524956494E47204C4943454E53452454455354244D522E5E5E3F0D0A3B363030373634313131313131313131313131393D3138303931393737303431313D3F0D0A2B32312020202020202020202020203120202020202020202020202039393939393538202030303130303F00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002A31330D0A',
     '2424663239312C3836343339343034303031373732372C4343452C010000000100010119000601250501060A071F14001B000B0802000970000A0C000B000016000017000018000019A1011A720929000041000006029DD9D3000341DDFF05047695FC250C60CC00000DBC7306004204000000020E0C08020500800004A59C00000039722520205E44524956494E47204C4943454E5345245445535437244D522E5E5E3F0D0A3B363030373634313131313131313131313131373D3138303731393737303431373D3F0D0A2B32332020202020202020202020203120202020202020202020202031303030303037202030303130303F000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002A38440D0A'
     ]
+
+Sampledathex2Nb = [
+    #2x N-bute : Type I : 0E BaseSattion : Type II : FE 2E : FWD_REV_SENS
+    '2424593134382C3836343339343034303031373732372C4343452C00000000010072001A000601230501060C071714001B000B0800000958010A07000B030016000017000018000019A1011A2A09290000410000070282D9D300035ADDFF0504782020260C3B0800000D3C1C00001C0100000042EE000000020E0C080205008000059BAB000000FE2B0B00000000000000000000002A41450D0A'
+    ]
+
 
 Samplejson = [
     #'{"1b":{"00":{"dh":"01","ih":"05"},"01":{"dh":"0A","ih":"06"},"02":{"dh":"00","ih":"07"},"03":{"dh":"00","ih":"14"},"04":{"dh":"02","ih":"15"}},"2b":{"00":{"dh":"0000","ih":"08"},"01":{"dh":"1F01","ih":"09"},"02":{"dh":"0700","ih":"0A"},"03":{"dh":"2600","ih":"0B"},"04":{"dh":"0000","ih":"16"},"05":{"dh":"0000","ih":"17"},"06":{"dh":"A201","ih":"19"},"07":{"dh":"2605","ih":"1A"},"08":{"dh":"2300","ih":"40"}},"4b":{"00":{"dh":"D7875701","ih":"02"},"01":{"dh":"4860CC06","ih":"03"},"02":{"dh":"DEBFB524","ih":"04"},"03":{"dh":"80680000","ih":"0C"},"04":{"dh":"E4A00300","ih":"0D"},"05":{"dh":"01000000","ih":"1C"}},"nb":{"numnbytepkg":"1","00":{"dh":"0401000000000000","ih":"49","sz":"9"}},"s_pkg_datalen":"84","s_pkg_numdatapkg":"21","s_pkg_partialhex":"54001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C010000000149090401000000000000","s_pkg_partialhexlen":"170","s_pkg_remaincontainhexlen":"1902"}'
@@ -202,7 +210,7 @@ def decode(datin,_verbose=False):
         _hexNumDataPkgID = remaincontainhex[(2*2):((2+2)*2)] # 2-byte
         _intNumDataPkgID = int.from_bytes(binascii.unhexlify(_hexNumDataPkgID),'little',signed=False)
         
-        partialhex = remaincontainhex[0:(_intDataPkgLen+1)*2]
+        partialhex = remaincontainhex[0:(_intDataPkgLen+2)*2] # fix bug --00-- : last -00
         remaincontainhex = remaincontainhex[(_intDataPkgLen+2)*2:]
         
         _jskey = 'pkg_{:02d}'.format(x)
@@ -316,6 +324,7 @@ def decode(datin,_verbose=False):
         if len(remainxbytehex) > 3: # fix bug nbyte >3
             _hexNumNBytePkg =  remainxbytehex[(0*2):((0+1)*2)] # 1-byte
             _intNumNBytePkg = int.from_bytes(binascii.unhexlify(_hexNumNBytePkg),'little',signed=False)
+            remainxbytehex = remainxbytehex[2:] # fix bug --00-- :  NumNBytePkg
         else: 
             _hexNumNBytePkg = '00'
             _intNumNBytePkg = len(_hexNumNBytePkg)
@@ -344,19 +353,37 @@ def decode(datin,_verbose=False):
         #_js['b'][_jskey]['nb']['numnbytepkg'] = str(_intNumNBytePkg)
         _js['b'][_jskey]['num_nb'] = str(_intNumNBytePkg)
         
+        
         for _x in range(_intNumNBytePkg):
             
             xbytehex = remainxbytehex
             
-            _xih =  xbytehex[(1*2):((1+1)*2)] # 1-byte
+            _xih =  xbytehex[(0*2):((0+1)*2)] # Type-I: 1-byte
             
-            _hexNumNbyteID = xbytehex[(2*2):((2+1)*2)] # 1-byte
+            _isover2xnb = False
+            if (_xih == 'FE') or  (_xih == 'FD') or  (_xih == 'FF'):
+                _isover2xnb = True
+            
+            if _isover2xnb:
+                _xih =  xbytehex[(0*2):((1+1)*2)] # Type-II: 2-byte
+                
+            if _verbose:
+                print('_isover2xnb FE xx',_isover2xnb)
+                print('_xih',_xih)
+            
+            _yy = 0
+            if not _isover2xnb:
+                _hexNumNbyteID = xbytehex[(1*2):((1+1)*2)] # Type-I: 1-byte
+            else:
+                _hexNumNbyteID = xbytehex[(1*2):((2+1)*2)] # Type-II: 2-byte
+                _yy= 1
+            
             _intNumNbyteID = int.from_bytes(binascii.unhexlify(_hexNumNbyteID),'little',signed=False)
             
-            _y= 3
-            _xrawhex = xbytehex[(_y*2):((_y+_intNumNbyteID)*2)] # N-byte
+            _y= 2
+            _xrawhex = xbytehex[((_y+_yy)*2):(((_y+_yy)+_intNumNbyteID)*2)] # N-byte
             
-            remainxbytehex = xbytehex[(_y+_intNumNbyteID-1)*2:] # Need RAW TCP Checking Nbyte..Nbyte-1....Nbyte-2
+            remainxbytehex = xbytehex[(_y+_intNumNbyteID)*2:] # Need RAW TCP Checking Nbyte..Nbyte-1....Nbyte-2
 
             _jsy = '{:02d}'.format(_x)
             _js['b'][_jskey]['nb'][_jsy] = {} # init nest dict
@@ -608,7 +635,18 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_c39_hexCard = ''
     _v_c39_strCard = ''
     _v_cOE_hexMccNmc = ''
-
+    _v_cFE2B_hexFwdRevSen = ''
+    _v_c28_strPhotoName = ''
+    _v_c2A_hexTemp1 = ''
+    _v_c2B_hexTemp2 = ''
+    _v_c2C_hexTemp3 = ''
+    _v_c2D_hexTemp4 = ''
+    
+    _v_c2E_hexTemp5 = ''
+    _v_c2F_hexTemp6 = ''
+    _v_c30_hexTemp7 = ''
+    _v_c31_hexTemp8 = ''
+    
     for _x in range(len(_objnb)):
         _kx = '{:02d}'.format(_x)
         _xih = _objnb[_kx]['ih']
@@ -623,12 +661,41 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
             _v_c39_strCard = str(binascii.unhexlify(_xrawhex))
         elif _xih == '0E':
             _v_cOE_hexMccNmc = _xrawhex
+        elif _xih == 'FE2B':
+            _v_cFE2B_hexFwdRevSen = _xrawhex
+        elif _xih == '28':
+            _v_c28_strPhotoName = str(binascii.unhexlify(_xrawhex))
+        elif _xih == '2A':
+            _v_c2A_hexTemp1 = _xrawhex
+        elif _xih == '2B':
+            _v_c2B_hexTemp2 = _xrawhex
+        elif _xih == '2C':
+            _v_c2C_hexTemp3 = _xrawhex
+        elif _xih == '2D':
+            _v_c2D_hexTemp4 = _xrawhex
+        elif _xih == '2E':
+            _v_c2E_hexTemp5 = _xrawhex
+        elif _xih == '2F':
+            _v_c2F_hexTemp6 = _xrawhex
+        elif _xih == '30':
+            _v_c30_hexTemp7 = _xrawhex
+        elif _xih == '31':
+            _v_c31_hexTemp8 = _xrawhex              
             
     if _verbose:
         print('_v_c39_hexCard', _v_c39_hexCard)
         print('_v_c39_strCard', _v_c39_strCard)
         print('_v_cOE_hexMccNmc', _v_cOE_hexMccNmc)
-
+        print('_v_cFE2B_hexFwdRevSen', _v_cFE2B_hexFwdRevSen)
+        print('_v_c28_strPhotoName', _v_c28_strPhotoName)
+        print('_v_c2A_hexTemp1', _v_c2A_hexTemp1)
+        print('_v_c2B_hexTemp2', _v_c2B_hexTemp2)
+        print('_v_c2C_hexTemp3', _v_c2C_hexTemp3)
+        print('_v_c2D_hexTemp4', _v_c2D_hexTemp4)
+        print('_v_c2E_hexTemp5', _v_c2E_hexTemp5)
+        print('_v_c2F_hexTemp6', _v_c2F_hexTemp6)
+        print('_v_c30_hexTemp7', _v_c30_hexTemp7)
+        print('_v_c31_hexTemp8', _v_c31_hexTemp8)
 
     
     #Encode
@@ -843,10 +910,15 @@ def cmd2proto(datin,_verbose=False):
 def main():
     print("main program")
     
+    print('####### Verbose Testing ##### 2')
     for (i, dat) in enumerate(Sampledathex):
         print(i)
         print(proto2msg(binascii.unhexlify(dat),_verbose=True))
-        
+
+    print('####### Verbose Testing ##### 2.1')
+    for (i, dat) in enumerate(Sampledathex2Nb):
+        print(i)
+        print(proto2msg(binascii.unhexlify(dat),_verbose=True))
  
     cmd2proto("SSS")
     cmd2proto("CCC",_verbose=True)
@@ -854,8 +926,6 @@ def main():
     for (i, dat) in enumerate(Samplecmd):
         print(i)
         print(cmd2proto(dat,_verbose=True))
-    
-    
     
     for (i, dat) in enumerate(Samplejson):
         print(i)
@@ -865,6 +935,13 @@ def main():
     for (i, dat) in enumerate(Sampledathex):
         print(i)
         print(proto2msg(binascii.unhexlify(dat),_verbose=False))
+
+    print('####### Silent ##### 2.1')    
+    for (i, dat) in enumerate(Sampledathex2Nb):
+        print(i)
+        print(proto2msg(binascii.unhexlify(dat),_verbose=False))
+        
+        
     print('####### Silent ##### 3') 
     for (i, dat) in enumerate(Samplecmd):
         print(i)
