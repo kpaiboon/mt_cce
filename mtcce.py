@@ -23,6 +23,8 @@ SOFTWARE.
 '''
 
 #MT CCE
+# Version 9
+# 2020-05-08 1. 2N-Byte Sampledathex2Nb
 # Version 8
 # 2020-03-16 1. EventCode share 1byte ( Code 01: T633L ) and 2byte ( Code 40: MDVR )
 # Version 7
@@ -45,7 +47,7 @@ import binascii
 import json
 import uuid
 
-__code_version = 'mtcce.v7'
+__code_version = 'mtcce.v9'
 
 __autoSpeedforceIO = 5 #5km/h
 
@@ -57,6 +59,11 @@ Sampledathex = [
     '2424643239312C3836343339343034303031373732372C4343452C0000000001000101190006012505010609071F14001B000B0803000957000A09000B000016000017000018000019A1011A7309290000410000060278D9D3000334DDFF05046895FC250C5CCC00000DAE7306004204000000020E0C08020500800004A59C00000039712520205E44524956494E47204C4943454E53452454455354244D522E5E5E3F0D0A3B363030373634313131313131313131313131393D3138303931393737303431313D3F0D0A2B32312020202020202020202020203120202020202020202020202039393939393538202030303130303F00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002A31330D0A',
     '2424663239312C3836343339343034303031373732372C4343452C010000000100010119000601250501060A071F14001B000B0802000970000A0C000B000016000017000018000019A1011A720929000041000006029DD9D3000341DDFF05047695FC250C60CC00000DBC7306004204000000020E0C08020500800004A59C00000039722520205E44524956494E47204C4943454E5345245445535437244D522E5E5E3F0D0A3B363030373634313131313131313131313131373D3138303731393737303431373D3F0D0A2B32332020202020202020202020203120202020202020202020202031303030303037202030303130303F000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002A38440D0A'
     ]
+
+Sampledathex2Nb = [
+    '3132332C',    
+    ]
+
 
 Samplejson = [
     #'{"1b":{"00":{"dh":"01","ih":"05"},"01":{"dh":"0A","ih":"06"},"02":{"dh":"00","ih":"07"},"03":{"dh":"00","ih":"14"},"04":{"dh":"02","ih":"15"}},"2b":{"00":{"dh":"0000","ih":"08"},"01":{"dh":"1F01","ih":"09"},"02":{"dh":"0700","ih":"0A"},"03":{"dh":"2600","ih":"0B"},"04":{"dh":"0000","ih":"16"},"05":{"dh":"0000","ih":"17"},"06":{"dh":"A201","ih":"19"},"07":{"dh":"2605","ih":"1A"},"08":{"dh":"2300","ih":"40"}},"4b":{"00":{"dh":"D7875701","ih":"02"},"01":{"dh":"4860CC06","ih":"03"},"02":{"dh":"DEBFB524","ih":"04"},"03":{"dh":"80680000","ih":"0C"},"04":{"dh":"E4A00300","ih":"0D"},"05":{"dh":"01000000","ih":"1C"}},"nb":{"numnbytepkg":"1","00":{"dh":"0401000000000000","ih":"49","sz":"9"}},"s_pkg_datalen":"84","s_pkg_numdatapkg":"21","s_pkg_partialhex":"54001500050501060A07001400150209080000091F010A07000B260016000017000019A2011A26054023000602D7875701034860CC0604DEBFB5240C806800000DE4A003001C010000000149090401000000000000","s_pkg_partialhexlen":"170","s_pkg_remaincontainhexlen":"1902"}'
@@ -843,10 +850,15 @@ def cmd2proto(datin,_verbose=False):
 def main():
     print("main program")
     
+    print('####### Verbose Testing ##### 2')
     for (i, dat) in enumerate(Sampledathex):
         print(i)
         print(proto2msg(binascii.unhexlify(dat),_verbose=True))
-        
+
+    print('####### Verbose Testing ##### 2.1')
+    for (i, dat) in enumerate(Sampledathex2Nb):
+        print(i)
+        print(proto2msg(binascii.unhexlify(dat),_verbose=True))
  
     cmd2proto("SSS")
     cmd2proto("CCC",_verbose=True)
@@ -854,8 +866,6 @@ def main():
     for (i, dat) in enumerate(Samplecmd):
         print(i)
         print(cmd2proto(dat,_verbose=True))
-    
-    
     
     for (i, dat) in enumerate(Samplejson):
         print(i)
@@ -865,6 +875,13 @@ def main():
     for (i, dat) in enumerate(Sampledathex):
         print(i)
         print(proto2msg(binascii.unhexlify(dat),_verbose=False))
+
+    print('####### Silent ##### 2.1')    
+    for (i, dat) in enumerate(Sampledathex2Nb):
+        print(i)
+        print(proto2msg(binascii.unhexlify(dat),_verbose=False))
+        
+        
     print('####### Silent ##### 3') 
     for (i, dat) in enumerate(Samplecmd):
         print(i)
