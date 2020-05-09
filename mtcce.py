@@ -24,6 +24,8 @@ SOFTWARE.
 
 #MT CCE
 # Version 9
+# 2020-05-08 1. fixed sz json : FE 2E
+# Version 9
 # 2020-05-08 1. 2N-Byte Sampledathex2Nb 2. FE 2E : FWD_REV_SENS 3. Temperature , PhotoName
 # Version 8
 # 2020-03-16 1. EventCode share 1byte ( Code 01: T633L ) and 2byte ( Code 40: MDVR )
@@ -47,7 +49,7 @@ import binascii
 import json
 import uuid
 
-__code_version = 'mtcce.v9'
+__code_version = 'mtcce.v10'
 
 __autoSpeedforceIO = 5 #5km/h
 
@@ -375,7 +377,7 @@ def decode(datin,_verbose=False):
             if not _isover2xnb:
                 _hexNumNbyteID = xbytehex[(1*2):((1+1)*2)] # Type-I: 1-byte
             else:
-                _hexNumNbyteID = xbytehex[(1*2):((2+1)*2)] # Type-II: 2-byte
+                _hexNumNbyteID = xbytehex[(2*2):((2+1)*2)] # Type-II: 2-byte
                 _yy= 1
             
             _intNumNbyteID = int.from_bytes(binascii.unhexlify(_hexNumNbyteID),'little',signed=False)
