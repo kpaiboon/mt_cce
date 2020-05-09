@@ -210,7 +210,7 @@ def decode(datin,_verbose=False):
         _hexNumDataPkgID = remaincontainhex[(2*2):((2+2)*2)] # 2-byte
         _intNumDataPkgID = int.from_bytes(binascii.unhexlify(_hexNumDataPkgID),'little',signed=False)
         
-        partialhex = remaincontainhex[0:(_intDataPkgLen+1)*2]
+        partialhex = remaincontainhex[0:(_intDataPkgLen+2)*2] # fix bug --00-- : last -00
         remaincontainhex = remaincontainhex[(_intDataPkgLen+2)*2:]
         
         _jskey = 'pkg_{:02d}'.format(x)
@@ -324,6 +324,7 @@ def decode(datin,_verbose=False):
         if len(remainxbytehex) > 3: # fix bug nbyte >3
             _hexNumNBytePkg =  remainxbytehex[(0*2):((0+1)*2)] # 1-byte
             _intNumNBytePkg = int.from_bytes(binascii.unhexlify(_hexNumNBytePkg),'little',signed=False)
+            remainxbytehex = remainxbytehex[2:] # fix bug --00-- :  NumNBytePkg
         else: 
             _hexNumNBytePkg = '00'
             _intNumNBytePkg = len(_hexNumNBytePkg)
@@ -352,19 +353,37 @@ def decode(datin,_verbose=False):
         #_js['b'][_jskey]['nb']['numnbytepkg'] = str(_intNumNBytePkg)
         _js['b'][_jskey]['num_nb'] = str(_intNumNBytePkg)
         
+        
         for _x in range(_intNumNBytePkg):
             
             xbytehex = remainxbytehex
             
-            _xih =  xbytehex[(1*2):((1+1)*2)] # 1-byte
+            _xih =  xbytehex[(0*2):((0+1)*2)] # Type-I: 1-byte
             
-            _hexNumNbyteID = xbytehex[(2*2):((2+1)*2)] # 1-byte
+            _isover2xnb = False
+            if (_xih == 'FE') or  (_xih == 'FD') or  (_xih == 'FF'):
+                _isover2xnb = True
+            
+            if _isover2xnb:
+                _xih =  xbytehex[(0*2):((1+1)*2)] # Type-II: 2-byte
+                
+            if _verbose:
+                print('_isover2xnb FE xx',_isover2xnb)
+                print('_xih',_xih)
+            
+            _yy = 0
+            if not _isover2xnb:
+                _hexNumNbyteID = xbytehex[(1*2):((1+1)*2)] # Type-I: 1-byte
+            else:
+                _hexNumNbyteID = xbytehex[(1*2):((2+1)*2)] # Type-II: 2-byte
+                _yy= 1
+            
             _intNumNbyteID = int.from_bytes(binascii.unhexlify(_hexNumNbyteID),'little',signed=False)
             
-            _y= 3
-            _xrawhex = xbytehex[(_y*2):((_y+_intNumNbyteID)*2)] # N-byte
+            _y= 2
+            _xrawhex = xbytehex[((_y+_yy)*2):(((_y+_yy)+_intNumNbyteID)*2)] # N-byte
             
-            remainxbytehex = xbytehex[(_y+_intNumNbyteID-1)*2:] # Need RAW TCP Checking Nbyte..Nbyte-1....Nbyte-2
+            remainxbytehex = xbytehex[(_y+_intNumNbyteID)*2:] # Need RAW TCP Checking Nbyte..Nbyte-1....Nbyte-2
 
             _jsy = '{:02d}'.format(_x)
             _js['b'][_jskey]['nb'][_jsy] = {} # init nest dict
