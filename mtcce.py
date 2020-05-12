@@ -663,14 +663,26 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         if _xih == '39':
             _v_c39_hexCard = _xrawhex
             _v_c39_strCard = str(binascii.unhexlify(_xrawhex))
+            _v_c39_strCard = _v_c39_strCard.replace('B\'', '')
+            _v_c39_strCard = _v_c39_strCard.replace('b\'', '')
+            _v_c39_strCard = _v_c39_strCard.replace('\'', '')
+            _v_c39_strCard = _v_c39_strCard.replace('\\r\\n', '\r')
         elif _xih == '0E':
             _v_cOE_hexMccNmc = _xrawhex
         elif _xih == 'FE2B':
             _v_cFE2B_hexFwdRevSen = _xrawhex
         elif _xih == '28':
             _v_c28_c44_share_strPhotoName = str(binascii.unhexlify(_xrawhex))
+            _v_c28_c44_share_strPhotoName = _v_c28_c44_share_strPhotoName.replace('B\'', '')
+            _v_c28_c44_share_strPhotoName = _v_c28_c44_share_strPhotoName.replace('b\'', '')
+            _v_c28_c44_share_strPhotoName = _v_c28_c44_share_strPhotoName.replace('\'', '')
+            _v_c28_c44_share_strPhotoName = _v_c28_c44_share_strPhotoName.replace('\\r\\n', '\r')
         elif _xih == '44':
             _v_c28_c44_share_strPhotoName = str(binascii.unhexlify(_xrawhex))
+            _v_c28_c44_share_strPhotoName = _v_c28_c44_share_strPhotoName.replace('B\'', '')
+            _v_c28_c44_share_strPhotoName = _v_c28_c44_share_strPhotoName.replace('b\'', '')
+            _v_c28_c44_share_strPhotoName = _v_c28_c44_share_strPhotoName.replace('\'', '')
+            _v_c28_c44_share_strPhotoName = _v_c28_c44_share_strPhotoName.replace('\\r\\n', '\r')
         elif _xih == '2A':
             _v_c2A_hexTemp1 = _xrawhex
         elif _xih == '2B':
