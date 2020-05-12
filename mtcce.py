@@ -23,7 +23,9 @@ SOFTWARE.
 '''
 
 #MT CCE
-# Version 9
+# Version 11
+# 2020-05-12 1. fixed N-byte: Photo name (*.jpg) : T633L = 0x28, MDVR = 0x44
+# Version 10
 # 2020-05-08 1. fixed sz json : FE 2E
 # Version 9
 # 2020-05-08 1. 2N-Byte Sampledathex2Nb 2. FE 2E : FWD_REV_SENS 3. Temperature , PhotoName
@@ -49,7 +51,7 @@ import binascii
 import json
 import uuid
 
-__code_version = 'mtcce.v10'
+__code_version = 'mtcce.v11'
 
 __autoSpeedforceIO = 5 #5km/h
 
@@ -638,7 +640,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_c39_strCard = ''
     _v_cOE_hexMccNmc = ''
     _v_cFE2B_hexFwdRevSen = ''
-    _v_c28_strPhotoName = ''
+    _v_c28_c44_share_strPhotoName = ''
     _v_c2A_hexTemp1 = ''
     _v_c2B_hexTemp2 = ''
     _v_c2C_hexTemp3 = ''
@@ -666,7 +668,9 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         elif _xih == 'FE2B':
             _v_cFE2B_hexFwdRevSen = _xrawhex
         elif _xih == '28':
-            _v_c28_strPhotoName = str(binascii.unhexlify(_xrawhex))
+            _v_c28_c44_share_strPhotoName = str(binascii.unhexlify(_xrawhex))
+        elif _xih == '44':
+            _v_c28_c44_share_strPhotoName = str(binascii.unhexlify(_xrawhex))
         elif _xih == '2A':
             _v_c2A_hexTemp1 = _xrawhex
         elif _xih == '2B':
@@ -689,7 +693,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_c39_strCard', _v_c39_strCard)
         print('_v_cOE_hexMccNmc', _v_cOE_hexMccNmc)
         print('_v_cFE2B_hexFwdRevSen', _v_cFE2B_hexFwdRevSen)
-        print('_v_c28_strPhotoName', _v_c28_strPhotoName)
+        print('_v_c28_c44_share_strPhotoName', _v_c28_c44_share_strPhotoName)
         print('_v_c2A_hexTemp1', _v_c2A_hexTemp1)
         print('_v_c2B_hexTemp2', _v_c2B_hexTemp2)
         print('_v_c2C_hexTemp3', _v_c2C_hexTemp3)
