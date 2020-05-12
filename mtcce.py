@@ -821,6 +821,30 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _y_rfid = _v_c39_strCard
         _v_u16Eventcode_share_1b2b = '37' # force '37' log in/out
         
+    
+    _y_cust_data ='alm'
+    #debug-case:  FwdRevSen
+    #_v_cFE2B_hexFwdRevSen = '0100000003000000050007' # 1|3|5|7
+    #_v_cFE2B_hexFwdRevSen = '020000000D000000110016' # 2|13|17|22
+    
+    if len(_v_cFE2B_hexFwdRevSen) >= (11*2):
+        # Min 11 byte ( 22-char)
+        #Status: 1 byte. Example:    00 = stop    01 = forward status    02 = reverse status
+        #Forward count: 4 bytes
+        #Reverse count: 4 bytes
+        #RPM: 2 bytes
+        # formatted AAA (Customized data): ,Sensor status | Number of forward | Number of reverse | speed,
+
+        _int_big_v_mag_State = int.from_bytes(binascii.unhexlify(_v_cFE2B_hexFwdRevSen[(0*2):(1*2)]),'big',signed=False)
+        _int_big_v_mag_FwdNum = int.from_bytes(binascii.unhexlify(_v_cFE2B_hexFwdRevSen[(2*2):(5*2)]),'big',signed=False)
+        _int_big_v_mag_BckNum = int.from_bytes(binascii.unhexlify(_v_cFE2B_hexFwdRevSen[(6*2):(9*2)]),'big',signed=False)
+        _int_big_v_mag_Speed = int.from_bytes(binascii.unhexlify(_v_cFE2B_hexFwdRevSen[(10*2):(11*2)]),'big',signed=False)
+        
+        _y_cust_data = '{:01d}|{:01d}|{:01d}|{:01d}'.format(_int_big_v_mag_State,_int_big_v_mag_FwdNum,_int_big_v_mag_BckNum,_int_big_v_mag_Speed)
+        
+        if _verbose:
+            print('_v_cFE2B_hexFwdRevSen', _v_cFE2B_hexFwdRevSen)
+            print('_y_cust_data', _y_cust_data)
         
     if _v_u16Eventcode_share_1b2b == 0:
         # do process
@@ -838,7 +862,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     pt= pt + str(_v_u8GpsNsat) +',' + str(_v_u8GsmStr) +',' + str(_v_u16SpeedKMH) +',' + str(_v_u16Heading) +','    # <Number of satellites><GSM signal strength><Speed><Direction>
     pt= pt + str(_v_f32Hdop) +',' + str(_v_u16Alt) +',' + str(_v_u32Mileage) +',' + str(_v_u32RunTimeSec) +','    # <Horizontal dilution of precision(HDOP)><Altitude><Mileage><Total time>
     pt= pt + _y_strBaseStationInfo +',' + _y_iost +',' + _y_adcnew +',' + _y_rfid +','    # <Base station info><I/O port status><Analog input value><Assisted event info or RFID>
-    pt= pt + 'alm'  +',' + '108' +',' + _y_strFuelPerc +',' + '0' +','    # <Customized data><Extended protocol version 108><Fuel percentage><Temperature sensor No. + Temperature value>
+    pt= pt + _y_cust_data  +',' + '108' +',' + _y_strFuelPerc +',' + '0' +','    # <Customized data><Extended protocol version 108><Fuel percentage><Temperature sensor No. + Temperature value>
     pt= pt + '0' +',' + '0' +',' + '0' +',' + '0' +','    # <Data N>
     pt= pt +'*FF\r\n' # <*Checksum>\r\n
 
