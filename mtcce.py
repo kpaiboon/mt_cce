@@ -23,6 +23,8 @@ SOFTWARE.
 '''
 
 #MT CCE
+# Version 12
+# 2020-05-13 1. fixed FWD_REV_SENS is little endian 2.Optm M_HexStriped
 # Version 11
 # 2020-05-12 1. fixed N-byte: Photo name (*.jpg) : T633L = 0x28, MDVR = 0x44
 # Version 10
@@ -51,7 +53,7 @@ import binascii
 import json
 import uuid
 
-__code_version = 'mtcce.v11'
+__code_version = 'mtcce.v12'
 
 __autoSpeedforceIO = 5 #5km/h
 
@@ -66,7 +68,14 @@ Sampledathex = [
 
 Sampledathex2Nb = [
     #2x N-bute : Type I : 0E BaseSattion : Type II : FE 2E : FWD_REV_SENS
-    '2424593134382C3836343339343034303031373732372C4343452C00000000010072001A000601230501060C071714001B000B0800000958010A07000B030016000017000018000019A1011A2A09290000410000070282D9D300035ADDFF0504782020260C3B0800000D3C1C00001C0100000042EE000000020E0C080205008000059BAB000000FE2B0B00000000000000000000002A41450D0A'
+    '2424593134382C3836343339343034303031373732372C4343452C00000000010072001A000601230501060C071714001B000B0800000958010A07000B030016000017000018000019A1011A2A09290000410000070282D9D300035ADDFF0504782020260C3B0800000D3C1C00001C0100000042EE000000020E0C080205008000059BAB000000FE2B0B00000000000000000000002A41450D0A',
+    '24 24 5D 31 34 33 2C 38 36 34 33 39 34 30 34 30 30 31 37 37 32 37 2C 43 43 45 2C 01 00 00 00 01 00 6D 00 19 00 06 01 04 05 01 06 09 07 1F 14 00 1B 00 0B 08 00 00 09 62 01 0A 0D 00 0B 00 00 16 00 00 17 00 00 18 00 00 19 A2 01 1A 2D 09 29 00 00 41 00 00 06 02 D5 D9 D3 00 03 1E DD FF 05 04 90 0E 20 26 0C 9D 03 00 00 0D 75 0A 00 00 42 EC 00 00 00 02 0E 0C 08 02 05 00 80 00 04 A5 9C 00 00 00 FE 2B 0B 02 19 00 00 00 2B 00 00 00 03 00 2A 36 33 0D 0A',
+    '24 5D 31 34 33 2C 38 36 34 33 39 34 30 34 30 30 31 37 37 32 37 2C 43 43 45 2C 01 00 00 00 01 00 6D 00 19 00 06 01 04 05 01 06 09 07 1F 14 00 1B 00 0B 08 00 00 09 62 01 0A 0D 00 0B 00 00 16 00 00 17 00 00 18 00 00 19 A2 01 1A 2D 09 29 00 00 41 00 00 06 02 D5 D9 D3 00 03 1E DD FF 05 04 90 0E 20 26 0C 9D 03 00 00 0D 75 0A 00 00 42 EC 00 00 00 02 0E 0C 08 02 05 00 80 00 04 A5 9C 00 00 00 FE 2B 0B 02 19 00 00 00 2B 00 00 00 03 00 2A 36 33 0D 0A',
+    '24245D3134332C3836343339343034303031373732372C4343452C0100000001006D00190006010405010609071F14001B000B0800000962010A0D000B000016000017000018000019A2011A2D092900004100000602D5D9D300031EDDFF0504900E20260C9D0300000D750A000042EC000000020E0C08020500800004A59C000000FE2B0B02190000002B00000003002A36330D0A',
+    '24 24 5C 35 39 32 2C 38 36 34 33 39 34 30 34 30 30 31 37 37 32 37 2C 43 43 45 2C 05 00 00 00 05 00 6D 00 19 00 06 01 0C 05 01 06 0A 07 1F 14 00 1B 00 0B 08 00 00 09 21 01 0A 0D 00 0B 00 00 16 00 00 17 00 00 18 00 00 19 A1 01 1A 2F 09 29 00 00 41 00 00 06 02 C0 D9 D3 00 03 32 DD FF 05 04 87 0E 20 26 0C 9B 03 00 00 0D 6B 0A 00 00 42 E6 00 00 00 02 0E 0C 08 02 05 00 80 00 04 A5 9C 00 00 00 FE 2B 0B 01 17 00 00 00 2A 00 00 00 11 00 6D 00 19 00 06 01 04 05 01 06 0A 07 1F 14 00 1B 00 0B 08 00 00 09 21 01 0A 0D 00 0B 00 00 16 00 00 17 00 00 18 00 00 19 A2 01 1A 30 09 29 00 00 41 00 00 06 02 C0 D9 D3 00 03 32 DD FF 05 04 88 0E 20 26 0C 9B 03 00 00 0D 6C 0A 00 00 42 EE 00 00 00 02 0E 0C 08 02 05 00 80 00 04 A5 9C 00 00 00 FE 2B 0B 01 17 00 00 00 2A 00 00 00 11 00 6D 00 19 00 06 01 0C 05 01 06 0A 07 1F 14 00 1B 00 0B 08 00 00 09 21 01 0A 0D 00 0B 00 00 16 00 00 17 00 00 18 00 00 19 A2 01 1A 2F 09 29 00 00 41 00 00 06 02 C0 D9 D3 00 03 32 DD FF 05 04 88 0E 20 26 0C 9B 03 00 00 0D 6D 0A 00 00 42 E6 00 00 00 02 0E 0C 08 02 05 00 80 00 04 A5 9C 00 00 00 FE 2B 0B 01 18 00 00 00 2A 00 00 00 21 00 6D 00 19 00 06 01 04 05 01 06 0A 07 1F 14 00 1B 00 0B 08 00 00 09 21 01 0A 0D 00 0B 00 00 16 00 00 17 00 00 18 00 00 19 A1 01 1A 2F 09 29 00 00 41 00 00 06 02 C0 D9 D3 00 03 32 DD FF 05 04 8A 0E 20 26 0C 9B 03 00 00 0D 6E 0A 00 00 42 EE 00 00 00 02 0E 0C 08 02 05 00 80 00 04 A5 9C 00 00 00 FE 2B 0B 01 18 00 00 00 2A 00 00 00 21 00 72 00 1A 00 06 01 23 05 01 06 0A 07 1F 14 00 1B 00 0B 08 00 00 09 21 01 0A 0D 00 0B 00 00 16 00 00 17 00 00 18 00 00 19 A1 01 1A 2A 09 29 00 00 41 00 00 07 02 C0 D9 D3 00 03 32 DD FF 05 04 8B 0E 20 26 0C 9B 03 00 00 0D 70 0A 00 00 1C 01 00 00 00 42 EE 00 00 00 02 0E 0C 08 02 05 00 80 00 04 A5 9C 00 00 00 FE 2B 0B 01 18 00 00 00 2A 00 00 00 21 00 2A 30 31 0D 0A',
+    '24245C3539322C3836343339343034303031373732372C4343452C0500000005006D00190006010C0501060A071F14001B000B0800000921010A0D000B000016000017000018000019A1011A2F092900004100000602C0D9D3000332DDFF0504870E20260C9B0300000D6B0A000042E6000000020E0C08020500800004A59C000000FE2B0B01170000002A00000011006D0019000601040501060A071F14001B000B0800000921010A0D000B000016000017000018000019A2011A30092900004100000602C0D9D3000332DDFF0504880E20260C9B0300000D6C0A000042EE000000020E0C08020500800004A59C000000FE2B0B01170000002A00000011006D00190006010C0501060A071F14001B000B0800000921010A0D000B000016000017000018000019A2011A2F092900004100000602C0D9D3000332DDFF0504880E20260C9B0300000D6D0A000042E6000000020E0C08020500800004A59C000000FE2B0B01180000002A00000021006D0019000601040501060A071F14001B000B0800000921010A0D000B000016000017000018000019A1011A2F092900004100000602C0D9D3000332DDFF05048A0E20260C9B0300000D6E0A000042EE000000020E0C08020500800004A59C000000FE2B0B01180000002A000000210072001A000601230501060A071F14001B000B0800000921010A0D000B000016000017000018000019A1011A2A092900004100000702C0D9D3000332DDFF05048B0E20260C9B0300000D700A00001C0100000042EE000000020E0C08020500800004A59C000000FE2B0B01180000002A00000021002A30310D0A',
+    '24 24 44 31 30 38 39 2C 38 36 34 33 39 34 30 34 30 30 31 37 37 32 37 2C 43 43 45 2C 0B 00 00 00 09 00 D1 00 19 00 06 01 25 05 00 06 00 07 00 14 00 1B 00 0B 08 00 00 09 00 00 0A 00 00 0B 00 00 16 00 00 17 03 00 18 00 00 19 A1 01 1A 26 09 29 00 00 41 00 00 06 02 6C D9 D3 00 03 AE DD FF 05 04 FB 0F 20 26 0C 43 04 00 00 0D C7 0B 00 00 42 EE 00 00 00 02 39 70 25 20 20 5E 44 52 49 56 49 4E 47 20 4C 49 43 45 4E 53 45 24 54 45 53 54 34 24 4D 52 2E 5E 5E 3F 7C 3B 36 30 30 37 36 34 31 31 31 31 31 31 31 31 31 31 31 31 34 3D 31 38 30 34 31 39 37 37 30 34 31 34 3D 3F 7C 2B 31 34 20 20 20 20 20 20 20 20 20 20 20 20 31 20 20 20 20 20 20 20 20 20 20 20 20 31 30 30 30 30 30 34 20 20 30 30 31 30 30 3F FE 2B 0B 02 00 00 00 00 01 00 00 00 00 00 5F 00 18 00 06 01 19 05 01 06 09 07 00 14 00 1B 00 0B 08 01 00 09 4B 01 0A 0F 00 0B 10 00 16 00 00 17 00 00 18 00 00 19 A1 01 1A 26 09 29 00 00 41 00 00 06 02 82 D9 D3 00 03 EE DC FF 05 04 00 10 20 26 0C 44 04 00 00 0D CB 0B 00 00 42 EC 00 00 00 01 FE 2B 0B 02 00 00 00 00 02 00 00 00 04 00 5F 00 18 00 06 01 0C 05 01 06 09 07 00 14 00 1B 00 0B 08 01 00 09 0A 00 0A 0F 00 0B 10 00 16 00 00 17 00 00 18 00 00 19 A1 01 1A 24 09 29 00 00 41 00 00 06 02 6E D9 D3 00 03 16 DD FF 05 04 06 10 20 26 0C 49 04 00 00 0D D1 0B 00 00 42 E6 00 00 00 01 FE 2B 0B 01 01 00 00 00 05 00 00 00 00 00 5F 00 18 00 06 01 1D 05 01 06 09 07 00 14 00 1B 00 0B 08 01 00 09 0A 00 0A 0F 00 0B 10 00 16 00 00 17 00 00 18 00 00 19 A1 01 1A 24 09 29 00 00 41 00 00 06 02 6E D9 D3 00 03 16 DD FF 05 04 06 10 20 26 0C 49 04 00 00 0D D1 0B 00 00 42 E6 00 00 00 01 FE 2B 0B 01 01 00 00 00 05 00 00 00 00 00 6D 00 19 00 06 01 04 05 01 06 08 07 1F 14 00 1B 00 0B 08 01 00 09 00 00 0A 10 00 0B 10 00 16 00 00 17 00 00 18 00 00 19 A1 01 1A 24 09 29 00 00 41 00 00 06 02 6B D9 D3 00 03 16 DD FF 05 04 06 10 20 26 0C 49 04 00 00 0D D2 0B 00 00 42 EE 00 00 00 02 0E 0C 08 02 05 00 00 00 00 00 00 00 00 00 FE 2B 0B 01 01 00 00 00 05 00 00 00 00 00 6D 00 19 00 06 01 0C 05 01 06 08 07 1F 14 00 1B 00 0B 08 01 00 09 00 00 0A 10 00 0B 10 00 16 00 00 17 00 00 18 00 00 19 A1 01 1A 26 09 29 00 00 41 00 00 06 02 6B D9 D3 00 03 16 DD FF 05 04 07 10 20 26 0C 49 04 00 00 0D D2 0B 00 00 42 E6 00 00 00 02 0E 0C 08 02 05 00 80 00 04 A5 9C 00 00 00 FE 2B 0B 01 02 00 00 00 05 00 00 00 26 00 6D 00 19 00 06 01 04 05 01 06 09 07 1F 14 00 1B 00 0B 08 00 00 09 53 01 0A 0F 00 0B 10 00 16 00 00 17 00 00 18 00 00 19 A1 01 1A 24 09 29 00 00 41 00 00 06 02 6C D9 D3 00 03 11 DD FF 05 04 09 10 20 26 0C 49 04 00 00 0D D4 0B 00 00 42 EE 00 00 00 02 0E 0C 08 02 05 00 80 00 04 A5 9C 00 00 00 FE 2B 0B 01 02 00 00 00 05 00 00 00 26 00 6D 00 19 00 06 01 0C 05 01 06 09 07 1F 14 00 1B 00 0B 08 00 00 09 5C 01 0A 0F 00 0B 10 00 16 00 00 17 00 00 18 00 00 19 A1 01 1A 24 09 29 00 00 41 00 00 06 02 6E D9 D3 00 03 11 DD FF 05 04 0A 10 20 26 0C 49 04 00 00 0D D5 0B 00 00 42 E6 00 00 00 02 0E 0C 08 02 05 00 80 00 04 A5 9C 00 00 00 FE 2B 0B 01 03 00 00 00 05 00 00 00 19 00 6D 00 19 00 06 01 04 05 01 06 09 07 1F 14 00 1B 00 0B 08 00 00 09 50 01 0A 0F 00 0B 10 00 16 00 00 17 00 00 18 00 00 19 A1 01 1A 26 09 29 00 00 41 00 00 06 02 71 D9 D3 00 03 0C DD FF 05 04 0A 10 20 26 0C 49 04 00 00 0D D6 0B 00 00 42 EE 00 00 00 02 0E 0C 08 02 05 00 80 00 04 A5 9C 00 00 00 FE 2B 0B 01 03 00 00 00 05 00 00 00 19 00 2A 31 32 0D 0A',
+    '24 24 42 31 34 38 2C 38 36 34 33 39 34 30 34 30 30 31 37 37 32 37 2C 43 43 45 2C 01 00 00 00 01 00 72 00 1A 00 06 01 23 05 01 06 0A 07 1F 14 00 1B 00 0B 08 01 00 09 2C 01 0A 09 00 0B 00 00 16 00 00 17 00 00 18 00 00 19 A1 01 1A 31 09 29 00 00 41 00 00 07 02 82 D9 D3 00 03 3E DD FF 05 04 03 0F 20 26 0C D5 03 00 00 0D E8 0A 00 00 1C 01 00 00 00 42 E6 00 00 00 02 0E 0C 08 02 05 00 80 00 04 A5 9C 00 00 00 FE 2B 0B 01 1F 00 00 00 3E 00 00 00 10 00 2A 36 36 0D 0A'
     ]
 
 
@@ -81,6 +90,11 @@ Samplecmd = [
     #'@@\60,864507030181266,C50,22,23,24,0,0,0,0,0,0,0,0,0,0,0,0,0*D4',
     #'@@a31,868998030242818,C07,*102#*99', #This Fifx USSD for Dtac '*102#'
     '@@G25,864507030181266,B70*62']
+
+
+M_HexStripped = lambda s: "".join(i for i in s if ((0x30<=ord(i)<=0x39) or (0x41<=ord(i)<=0x46) or (0x61<=ord(i)<=0x66)) )
+#print(M_HexStripped("12 56 : 88 AAFF aaff\r\n\tss"))
+
 
 
 def decode(datin,_verbose=False):
@@ -131,14 +145,11 @@ def decode(datin,_verbose=False):
     
     # \r\n
     _tail1hex = rawhex[len(rawhex)-(2*2):] # Last 2byte
-
     
     if not ('$$' in _header1) :
         return ''
-    
     if not (',CCE,' in _header1) :
         return ''
-
     if not ('0D0A' in _tail1hex.upper()) :
         return ''
     
@@ -162,7 +173,6 @@ def decode(datin,_verbose=False):
     _js['h1_pid'] = _header_indentifier
     _js['h1_imei'] = _header_imei
     _js['h1_cmdtype'] = _header_cmdtype
-
     
     if _verbose:
         print('>>Header-1')
@@ -188,7 +198,6 @@ def decode(datin,_verbose=False):
         print('_hexRemainBuffer', len(_hexRemainBuffer), _hexRemainBuffer, _intRemainBuffer)
         print('>>Header-2_intNumSmallPkg')
         print('_hexNumSmallPkg', len(_hexNumSmallPkg), _hexNumSmallPkg, _intNumSmallPkg)
-   
 
     fullcontainhex = rawhex[((_cce_ofs+4+2)*2):]
     remaincontainhex = fullcontainhex
@@ -237,7 +246,6 @@ def decode(datin,_verbose=False):
         
         #0-loop
         remainxbytehex = partialhex[4*2:]
-        
         xbytehex = remainxbytehex
         
         _hexNum1byteID = xbytehex[(0*2):((0+1)*2)] # 1-byte
@@ -338,13 +346,11 @@ def decode(datin,_verbose=False):
             print(_hexNumNBytePkg)
             print(_intNumNBytePkg)
        
-
         if _verbose:
             print('>>Nbyte_remainxbytehex')
             print('remainxbytehex', len(remainxbytehex), remainxbytehex)
             print('>>Nbyte_Loop for _intNumNBytePkg:', _intNumNBytePkg)
 
-        
         _js['h3_NumNBytePkg'] = str(_intNumNBytePkg)
             
         if _intNumNBytePkg >  _this_limit_for_numpkg:
@@ -359,9 +365,7 @@ def decode(datin,_verbose=False):
         
         
         for _x in range(_intNumNBytePkg):
-            
             xbytehex = remainxbytehex
-            
             _xih =  xbytehex[(0*2):((0+1)*2)] # Type-I: 1-byte
             
             _isover2xnb = False
@@ -395,7 +399,6 @@ def decode(datin,_verbose=False):
             _js['b'][_jskey]['nb'][_jsy]['ih'] = _xih
             _js['b'][_jskey]['nb'][_jsy]['dh'] = _xrawhex
 
-            
             if _verbose:
                 print('x',_x)
                 print('>>x-byte__xidhex',len(_xih),_xih)
@@ -403,7 +406,6 @@ def decode(datin,_verbose=False):
                 print('>>x-byte_hexNumNbyteID',len(_hexNumNbyteID), _hexNumNbyteID, _intNumNbyteID)
                 print('>>x-byte__xbytehex',len(xbytehex), xbytehex)
                 print('>>x-byte__remainxbytehex',len(remainxbytehex),remainxbytehex)
-
 
     # Last func
     _js['in_rawhex'] = rawhex
@@ -413,7 +415,6 @@ def decode(datin,_verbose=False):
     #_data = json.dumps(_js, indent=4, sort_keys=True)
     _data = json.dumps(_js, sort_keys=True)
 
-    
     if _verbose:       
         print(json.dumps(_data, indent=4, sort_keys=True))
         
@@ -433,9 +434,6 @@ def is_complex(objct):
         return complex(objct['real'], objct['img'])
     return objct
 
-    
-    
-    
 
 def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID = '1'):
     
@@ -445,14 +443,12 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     if _verbose: 
         print(len(datin))
         
-    
     try:
         _js = json.loads(datin)
     except ValueError as e:
         print(e)
         print("JSON input error")
         return ''
-
 
     try:
         _obj1b = _js['1b']
@@ -502,7 +498,6 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
             _v_hexOutput= _xrawhex
         elif _xih == '15':
             _v_hexinput= _xrawhex
-         
             
     if _verbose:
         print('_v_u8GpsValid', _v_u8GpsValid)
@@ -511,7 +506,6 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_hexOutput', _v_hexOutput)
         print('_v_hexInput', _v_hexInput)
         print('_v_u16Eventcode_share_1b2b', _v_u16Eventcode_share_1b2b)   
-
 
     # init var @ 2b
     _v_u16SpeedKMH = 0
@@ -525,7 +519,6 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     _v_u16HundredthAD5 = 0
     _v_u16HundredthAD6 = 0
     _v_u16HundredthFuelPercentage = 0
-
     
 
     for _x in range(len(_obj2b)):
@@ -620,8 +613,6 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         elif _xih == '42':
             _v_hexWordInput = _xrawhex
             _v_hexInput = _v_hexWordInput[0:2]
-            
-
 
     if _verbose:
         print('_v_f32Lt', _v_f32Lt)
@@ -824,23 +815,23 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     
     _y_cust_data ='alm'
     #debug-case:  FwdRevSen
-    #_v_cFE2B_hexFwdRevSen = '0100000003000000050007' # 1|3|5|7
-    #_v_cFE2B_hexFwdRevSen = '020000000D000000110016' # 2|13|17|22
+    #_v_cFE2B_hexFwdRevSen = '0103000000050000000700' # 1|3|5|7
+    #_v_cFE2B_hexFwdRevSen = '020D000000110000001600' # 2|13|17|22
     
     if len(_v_cFE2B_hexFwdRevSen) >= (11*2):
-        # Min 11 byte ( 22-char)
+        # Min 11 byte ( 22-char) ( little-endian)
         #Status: 1 byte. Example:    00 = stop    01 = forward status    02 = reverse status
         #Forward count: 4 bytes
         #Reverse count: 4 bytes
         #RPM: 2 bytes
         # formatted AAA (Customized data): ,Sensor status | Number of forward | Number of reverse | speed,
 
-        _int_big_v_mag_State = int.from_bytes(binascii.unhexlify(_v_cFE2B_hexFwdRevSen[(0*2):(1*2)]),'big',signed=False)
-        _int_big_v_mag_FwdNum = int.from_bytes(binascii.unhexlify(_v_cFE2B_hexFwdRevSen[(2*2):(5*2)]),'big',signed=False)
-        _int_big_v_mag_BckNum = int.from_bytes(binascii.unhexlify(_v_cFE2B_hexFwdRevSen[(6*2):(9*2)]),'big',signed=False)
-        _int_big_v_mag_Speed = int.from_bytes(binascii.unhexlify(_v_cFE2B_hexFwdRevSen[(10*2):(11*2)]),'big',signed=False)
+        _int_v_mag_State = int.from_bytes(binascii.unhexlify(_v_cFE2B_hexFwdRevSen[(0*2):(1*2)]),'little',signed=False) # 1 byte 0 
+        _int_v_mag_FwdNum = int.from_bytes(binascii.unhexlify(_v_cFE2B_hexFwdRevSen[(1*2):(5*2)]),'little',signed=False) # 4 byte  1 2 3 4
+        _int_v_mag_BckNum = int.from_bytes(binascii.unhexlify(_v_cFE2B_hexFwdRevSen[(5*2):(9*2)]),'little',signed=False) # 4 byte  5 6 7 8
+        _int_v_mag_Speed = int.from_bytes(binascii.unhexlify(_v_cFE2B_hexFwdRevSen[(9*2):(11*2)]),'little',signed=False) # 2 byte 9 10
         
-        _y_cust_data = '{:01d}|{:01d}|{:01d}|{:01d}'.format(_int_big_v_mag_State,_int_big_v_mag_FwdNum,_int_big_v_mag_BckNum,_int_big_v_mag_Speed)
+        _y_cust_data = '{:01d}|{:01d}|{:01d}|{:01d}'.format(_int_v_mag_State,_int_v_mag_FwdNum,_int_v_mag_BckNum,_int_v_mag_Speed)
         
         if _verbose:
             print('_v_cFE2B_hexFwdRevSen', _v_cFE2B_hexFwdRevSen)
@@ -960,6 +951,7 @@ def main():
     print('####### Verbose Testing ##### 2.1')
     for (i, dat) in enumerate(Sampledathex2Nb):
         print(i)
+        dat = M_HexStripped(dat)
         print(proto2msg(binascii.unhexlify(dat),_verbose=True))
  
     cmd2proto("SSS")
@@ -981,6 +973,7 @@ def main():
     print('####### Silent ##### 2.1')    
     for (i, dat) in enumerate(Sampledathex2Nb):
         print(i)
+        dat = M_HexStripped(dat)
         print(proto2msg(binascii.unhexlify(dat),_verbose=False))
         
         
