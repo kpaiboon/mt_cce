@@ -627,7 +627,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_u32SysFlags', _v_u32SysFlags)
         print('_v_hexWordInput', _v_hexWordInput)
         print('_v_hexInput', _v_hexInput)
-        print('Final _v_hexInput', _v_hexInput)
+
 
     # init var @ nb
     _v_c39_hexCard = ''
