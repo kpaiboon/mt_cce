@@ -1019,6 +1019,12 @@ def cmd2proto(datin,_verbose=False):
                 tdat = tdat + '**FF'
                 
                 data,cksum,calc_cksum,finalnmeadata = checksum2(tdat,_verbose=True) # add *FF to fix bug checksum
+                
+                print(hex(sum('1c03e8'.encode('ascii')) % 256)[2:].upper()) # 0x94 or 148 dec
+                print(hex(sum(datin[:len(datin)-2].encode('ascii')) % 256)[2:].upper())
+
+
+
                 tdat = '@@'+finalnmeadata + '\r\n' # + \r\n 
                 postdat= tdat
             
