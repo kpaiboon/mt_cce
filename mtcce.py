@@ -23,6 +23,8 @@ SOFTWARE.
 '''
 
 #MT CCE
+# Version 12B
+# 2020-05-14 1. Show Hex input16 and output
 # Version 12
 # 2020-05-13 1. fixed FWD_REV_SENS is little endian 2.Optm M_HexStriped
 # Version 11
@@ -53,7 +55,7 @@ import binascii
 import json
 import uuid
 
-__code_version = 'mtcce.v12'
+__code_version = 'mtcce.v12B'
 
 __autoSpeedforceIO = 5 #5km/h
 
@@ -624,6 +626,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_hexSysFlags', _v_hexSysFlags)  
         print('_v_u32SysFlags', _v_u32SysFlags)
         print('_v_hexWordInput', _v_hexWordInput)
+        print('_v_hexInput', _v_hexInput)
         print('Final _v_hexInput', _v_hexInput)
 
     # init var @ nb
@@ -760,6 +763,12 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         
     _v_hexLegacyIO = '1F1F'
     _v_hexLegacyIO = _v_hexInput + _v_hexOutput
+    
+    if _verbose:
+        print('Pre _v_hexInput', _v_hexInput)
+        print('Pre _v_hexOutput', _v_hexOutput)
+        print('Pre _v_hexLegacyIO', _v_hexLegacyIO)
+        
 
     #debug-case:  _v_u32SysFlags bit 1 <== 0000 00x0 where: x == 1 or 0x02
     #_v_u32SysFlags = 0x02 # ACC On
