@@ -24,7 +24,7 @@ SOFTWARE.
 
 #MT CCE
 # Version 12B
-# 2020-05-14 1. Show Hex input16 and output
+# 2020-05-14 1. Show Hex input16 and output 2. Add prefix ,AAA
 # Version 12
 # 2020-05-13 1. fixed FWD_REV_SENS is little endian 2.Optm M_HexStriped
 # Version 11
@@ -54,8 +54,11 @@ import datetime
 import binascii
 import json
 import uuid
+import re
 
 __code_version = 'mtcce.v12B'
+
+__ADD_PREFIX_IMEI = 'FOOBAR'
 
 __autoSpeedforceIO = 5 #5km/h
 
@@ -91,12 +94,58 @@ Samplecmd = [
     #'@@z25,864507030181266,E91*9B\r\n',
     #'@@\60,864507030181266,C50,22,23,24,0,0,0,0,0,0,0,0,0,0,0,0,0*D4',
     #'@@a31,868998030242818,C07,*102#*99', #This Fifx USSD for Dtac '*102#'
-    '@@G25,864507030181266,B70*62']
+    '@@G25,864507030181266,B70*62',
+    '$GPGSV,3,3,10,26,37,134,00,29,25,136,00*76',
+    '@@A25,865789020991321,A10*62' #@ sample mdvr the loc query
+    ]
 
 
 M_HexStripped = lambda s: "".join(i for i in s if ((0x30<=ord(i)<=0x39) or (0x41<=ord(i)<=0x46) or (0x61<=ord(i)<=0x66)) )
 #print(M_HexStripped("12 56 : 88 AAFF aaff\r\n\tss"))
 
+#import re
+''' Calculate  the checksum for NMEA sentence 
+    from a GPS device. An NMEA sentence comprises
+    a number of comma separated fields followed by
+    a checksum (in hex) after a "*". An example
+    of NMEA sentence with a correct checksum (of
+    0x76) is:
+    
+      GPGSV,3,3,10,26,37,134,00,29,25,136,00*76"
+'''
+def checksum2(sentence,_verbose=False):
+    #_verbose=True
+    ''' $$ Remove any newlines '''
+    if re.search("\n$", sentence):
+        sentence = sentence[:-1]
+        
+    ''' @@ Remove any newlines '''
+    if re.search("\n@", sentence):
+        sentence = sentence[:-1]
+
+    _s_loc = sentence.rfind('*')
+    nmeadata = sentence[:_s_loc]
+    cksum = sentence[_s_loc+1:len(sentence)]
+
+    calc_cksum = 0
+    for s in nmeadata:
+        calc_cksum ^= ord(s)
+    
+    calc_cksum = '{:02X}'.format(calc_cksum)
+
+    ''' Return the nmeadata, the checksum from
+        sentence, and the calculated checksum
+    '''
+    finalnmeadata = nmeadata + '*' + calc_cksum
+    
+    if _verbose:
+        print('>>func checksum:old _s_loc::[',_s_loc,']')
+        print('>>func checksum:old nmeadata::[',nmeadata,']')
+        print('>>func checksum:old cksum::[',cksum,']')
+        print('>>func checksum:new calc_cksum::[',calc_cksum,']')
+        print('>>func checksum:new finalnmeadata::[',finalnmeadata,']')
+    
+    return nmeadata, cksum, calc_cksum,finalnmeadata
 
 
 def decode(datin,_verbose=False):
@@ -899,6 +948,11 @@ def proto2msg(datin,_verbose=False):
         return ''
     
     #_js = json.loads(str(_data))
+    if len(__ADD_PREFIX_IMEI) > 0:
+        _txt_imei = __ADD_PREFIX_IMEI + _txt_imei
+        if _verbose:
+            print('>> @Override _txt_imei',_txt_imei)
+            
     
     if _verbose:       
         #print(json.dumps(_js, indent=4, sort_keys=True))
@@ -941,6 +995,36 @@ def cmd2proto(datin,_verbose=False):
         print(datin)
         
     postdat = datin
+    
+    if len(__ADD_PREFIX_IMEI) > 0:
+        #_txt_imei = __ADD_PREFIX_IMEI + _txt_imei
+        #data,cksum,calc_cksum,finalnmeadata = checksum2(tdat + '*FF') # add *FF to fix bug checksum
+        #tdat= finalnmeadata + '\r\n' # + \r\n
+        
+        '''
+            *: It is a fixed character. Checksum: Contains two hexadecimal characters; indicates the sum of characters
+            from the packet header to the asterisk (*) (including the packet header and asterisk).
+            $$<Data identifier><Data length>,<IMEI>,<Command type>,<Command content><*Checksum>\r\n
+        '''
+
+        if len(datin) > 2:
+            #if not (datin[0:2] == '@@'): # Test false
+            if datin[0:2] == '@@': # 
+                tdat =  datin
+                tdat = tdat.replace('\r','')
+                tdat = tdat.replace('\n','')
+                tdat = tdat.replace(','+__ADD_PREFIX_IMEI,',') # , <= ,FOOBAR
+                
+                tdat = tdat[:len(tdat)-3]
+                tdat = tdat + '**FF'
+                
+                data,cksum,calc_cksum,finalnmeadata = checksum2(tdat,_verbose=True) # add *FF to fix bug checksum
+                tdat = '@@'+finalnmeadata + '\r\n' # + \r\n 
+                postdat= tdat
+            
+        if _verbose:
+            print('>> @Override __ADD_PREFIX_IMEI cmd2proto',__ADD_PREFIX_IMEI)
+            
     
     if _verbose:
         print(postdat)
