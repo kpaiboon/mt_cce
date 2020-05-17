@@ -61,7 +61,7 @@ import re
 __code_version = 'mtcce.v14'
 
 __PATTERN_IMEI = '86'
-__NEW_PREFIX_IMEI = '__'
+__NEW_PREFIX_IMEI = '!!'
 
 __autoSpeedforceIO = 5 #5km/h
 
