@@ -23,6 +23,8 @@ SOFTWARE.
 '''
 
 #MT CCE
+# Version 14
+# 2020-05-18 1. Matching pattern IMEI
 # Version 12B
 # 2020-05-14 1. Show Hex input16 and output 2. Add prefix ,AAA
 # Version 12
@@ -56,9 +58,10 @@ import json
 import uuid
 import re
 
-__code_version = 'mtcce.v12B'
+__code_version = 'mtcce.v14'
 
-__ADD_PREFIX_IMEI = 'FOOBAR'
+__PATTERN_IMEI = '86'
+__NEW_PREFIX_IMEI = '__'
 
 __autoSpeedforceIO = 5 #5km/h
 
@@ -96,7 +99,7 @@ Samplecmd = [
     #'@@a31,868998030242818,C07,*102#*99', #This Fifx USSD for Dtac '*102#'
     '@@G25,864507030181266,B70*62',
     '@@A25,865789020991321,A10*62', #@ sample CCE mdvr the loc query
-    '@@A25,'+__ADD_PREFIX_IMEI+'865789020991321,A10*62'
+    '@@A25,'+__NEW_PREFIX_IMEI+'5789020991321,A10*62'
     
     ]
 
@@ -905,11 +908,12 @@ def proto2msg(datin,_verbose=False):
         return ''
     
     #_js = json.loads(str(_data))
-    if len(__ADD_PREFIX_IMEI) > 0:
-        _txt_imei = __ADD_PREFIX_IMEI + _txt_imei
-        if _verbose:
-            print('>> @Override _txt_imei',_txt_imei)
-            
+    if len(__NEW_PREFIX_IMEI) > 0:
+        if _txt_imei[0:2] == __PATTERN_IMEI:
+            _txt_imei = __NEW_PREFIX_IMEI + _txt_imei[2:]
+            if _verbose:
+                print('>> @Override _txt_imei',_txt_imei)
+                
     
     if _verbose:       
         #print(json.dumps(_js, indent=4, sort_keys=True))
@@ -960,25 +964,29 @@ def cmd2proto(datin,_verbose=False):
         
     postdat = datin
     
-    if len(__ADD_PREFIX_IMEI) > 0:
-        if len(datin) > 2:
-            if datin[0:2] == '@@': # 
-                tdat =  datin
-                tdat = tdat.replace('\r','')
-                tdat = tdat.replace('\n','')
-                tdat = tdat.replace(','+__ADD_PREFIX_IMEI,',') # , <= ,FOOBAR
-                
-                tdat = tdat[:len(tdat)-2]
+    if len(__NEW_PREFIX_IMEI) > 0:
+        if len(datin) > 10:
+            if datin[0:2] == '@@': #
+                if datin[0:10].find(__NEW_PREFIX_IMEI) >=0:                    
+                    tdat =  datin[0:10] # Extrack A
+                    tdat = tdat.replace('\r','')
+                    tdat = tdat.replace('\n','')
+                    tdat = tdat.replace(',' + __NEW_PREFIX_IMEI, ',' +__PATTERN_IMEI) # ,86 <= ,AA
+                    
+                    tdat = tdat + datin[10:] # A+B
+                    
+                    
+                    tdat = tdat[:len(tdat)-2]
 
-                #print(hex(sum('1c03e8'.encode('ascii')) % 256)[2:].upper()) # 0x94
-                #print(hex(sum(tdat.encode('ascii')) % 256)[2:].upper())
+                    #print(hex(sum('1c03e8'.encode('ascii')) % 256)[2:].upper()) # 0x94
+                    #print(hex(sum(tdat.encode('ascii')) % 256)[2:].upper())
+                    
+                    csumhex = hex(sum(tdat.encode('ascii')) % 256)[2:].upper()
+                    tdat = tdat + csumhex + '\r\n'
+                    postdat= tdat
                 
-                csumhex = hex(sum(tdat.encode('ascii')) % 256)[2:].upper()
-                tdat = tdat + csumhex + '\r\n'
-                postdat= tdat
-            
-                if _verbose:
-                    print('>> @Override __ADD_PREFIX_IMEI cmd2proto',__ADD_PREFIX_IMEI)
+                    if _verbose:
+                        print('>> @Override __ADD_PREFIX_IMEI cmd2proto',__NEW_PREFIX_IMEI , '__PATTERN_IMEI',__PATTERN_IMEI)
     
     if _verbose:
         print(postdat)
