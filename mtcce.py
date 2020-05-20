@@ -23,6 +23,8 @@ SOFTWARE.
 '''
 
 #MT CCE
+# Version 15
+# 2020-05-20 1. Bug fixex _v_hexInput <= _v_hexinput= _xrawhex 2. sz = len(__PATTERN_IMEI)
 # Version 14
 # 2020-05-18 1. Matching pattern IMEI
 # Version 12B
@@ -58,7 +60,7 @@ import json
 import uuid
 import re
 
-__code_version = 'mtcce.v14'
+__code_version = 'mtcce.v15'
 
 __PATTERN_IMEI = '86'
 __NEW_PREFIX_IMEI = '!!'
@@ -508,7 +510,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         elif _xih == '14':
             _v_hexOutput= _xrawhex
         elif _xih == '15':
-            _v_hexinput= _xrawhex
+            _v_hexInput= _xrawhex
             
     if _verbose:
         print('_v_u8GpsValid', _v_u8GpsValid)
@@ -875,7 +877,6 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     pt= pt + '0' +',' + '0' +',' + '0' +',' + '0' +','    # <Data N>
     pt= pt +'*FF\r\n' # <*Checksum>\r\n
 
-
     if _verbose:
         print(pt)
         
@@ -884,13 +885,11 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
 
 
 
-
 def proto2msg(datin,_verbose=False):
     datret = ''
     _data= str(decode(datin,_verbose))
     
     #print(str(binascii.hexlify(datin)).upper())
-    
     try:
         _js = json.loads(_data)
     except ValueError as e:
@@ -909,12 +908,12 @@ def proto2msg(datin,_verbose=False):
     
     #_js = json.loads(str(_data))
     if len(__NEW_PREFIX_IMEI) > 0:
-        if _txt_imei[0:2] == __PATTERN_IMEI:
-            _txt_imei = __NEW_PREFIX_IMEI + _txt_imei[2:]
+        sz = len(__PATTERN_IMEI)
+        if _txt_imei[0:sz] == __PATTERN_IMEI:
+            _txt_imei = __NEW_PREFIX_IMEI + _txt_imei[sz:]
             if _verbose:
                 print('>> @Override _txt_imei',_txt_imei)
                 
-    
     if _verbose:       
         #print(json.dumps(_js, indent=4, sort_keys=True))
         print(len(_data))
@@ -930,15 +929,12 @@ def proto2msg(datin,_verbose=False):
     _b_obj= _js['b']
 
     
-    
     if _verbose:       
         print('_b_obj', len(_b_obj), _b_obj)
         
     for _x in range(len(_b_obj)):
         _kx = 'pkg_{:02d}'.format(_x)
-        
         _b_obj= _js['b'][_kx]
-
 
         if _verbose:
             print('_b_obj', len(_b_obj), _b_obj)
@@ -971,11 +967,9 @@ def cmd2proto(datin,_verbose=False):
                     tdat =  datin[0:10] # Extrack A
                     tdat = tdat.replace('\r','')
                     tdat = tdat.replace('\n','')
-                    tdat = tdat.replace(',' + __NEW_PREFIX_IMEI, ',' +__PATTERN_IMEI) # ,86 <= ,AA
+                    tdat = tdat.replace(',' +__PATTERN_IMEI , ',' +__NEW_PREFIX_IMEI) # ,86 <= ,AA
                     
                     tdat = tdat + datin[10:] # A+B
-                    
-                    
                     tdat = tdat[:len(tdat)-2]
 
                     #print(hex(sum('1c03e8'.encode('ascii')) % 256)[2:].upper()) # 0x94
@@ -986,7 +980,7 @@ def cmd2proto(datin,_verbose=False):
                     postdat= tdat
                 
                     if _verbose:
-                        print('>> @Override __ADD_PREFIX_IMEI cmd2proto',__NEW_PREFIX_IMEI , '__PATTERN_IMEI',__PATTERN_IMEI)
+                        print('>> @Override __ADD_PREFIX_IMEI cmd2proto',__NEW_PREFIX_IMEI , '__PATTERN_IMEI',__PATTERN_IMEI, 'New CheckSum',csumhex)            
     
     if _verbose:
         print(postdat)
