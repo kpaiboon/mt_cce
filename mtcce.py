@@ -876,7 +876,7 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     pt= pt + _x_strDataID + _y_datalen + ','+ _x_strImei + ',' + 'AAA' + ',' + str(_v_u16Eventcode_share_1b2b) + ','    # $$<Data identifier><Data length><IMEI>AAA<Event code>
     pt= pt + str(_v_f32Lt)+','+ str(_v_f32Ln) + ',' + _v_strGpsUTCyymmdHMMSS + ',' + _y_GpsValid + ','    # <Latitude><Longitude><Date and time><Positioning status>
     pt= pt + str(_v_u8GpsNsat) +',' + str(_v_u8GsmStr) +',' + str(_v_u16SpeedKMH) +',' + str(_v_u16Heading) +','    # <Number of satellites><GSM signal strength><Speed><Direction>
-    pt= pt + str(_v_f32Hdop) +',' + str(_v_u16Alt) +',' + str(_v_u32Mileage) +',' + str(_v_u32RunTimeSec) +','    # <Horizontal dilution of precision(HDOP)><Altitude><Mileage><Total time>
+    pt= pt + str(int(_v_f32Hdop/10)) +',' + str(_v_u16Alt) +',' + str(_v_u32Mileage) +',' + str(_v_u32RunTimeSec) +','    # <Horizontal dilution of precision(HDOP)><Altitude><Mileage><Total time>
     pt= pt + _y_strBaseStationInfo +',' + _y_iost +',' + _y_adcnew +',' + _y_rfid +','    # <Base station info><I/O port status><Analog input value><Assisted event info or RFID>
     pt= pt + _y_cust_data  +',' + '108' +',' + _y_strFuelPerc +',' + '0' +','    # <Customized data><Extended protocol version 108><Fuel percentage><Temperature sensor No. + Temperature value>
     pt= pt + '0' +',' + '0' +',' + '0' +',' + _y_a84_data +','    # <Data N>
