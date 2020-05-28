@@ -280,9 +280,10 @@ def decode(datin,_verbose=False):
             _js['b'][_jskey]['1b'][_jsy]['dh'] = _xrawhex
             
             if _verbose:
-                print('x',_x)
-                print('>>x-byte__xidhex',len(_xih),_xih)
-                print('>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
+                print('x',_x,'\t>>x-byte__xidhex',len(_xih),_xih,'\t>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
+                #print('x',_x)
+                #print('>>x-byte__xidhex',len(_xih),_xih)
+                #print('>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
                 
         remainxbytehex = xbytehex[( 1+ (_intNum1byteID*2))*2:]
         if _verbose:
@@ -309,9 +310,10 @@ def decode(datin,_verbose=False):
             _js['b'][_jskey]['2b'][_jsy]['dh'] = _xrawhex
             
             if _verbose:
-                print('x',_x)
-                print('>>x-byte__xidhex',len(_xih),_xih)
-                print('>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
+                print('x',_x,'\t>>x-byte__xidhex',len(_xih),_xih,'\t>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
+                #print('x',_x)
+                #print('>>x-byte__xidhex',len(_xih),_xih)
+                #print('>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
                 
         remainxbytehex = xbytehex[( 1+ (_intNum2byteID*3))*2:]
         if _verbose:
@@ -338,9 +340,10 @@ def decode(datin,_verbose=False):
             _js['b'][_jskey]['4b'][_jsy]['dh'] = _xrawhex
             
             if _verbose:
-                print('x',_x)
-                print('>>x-byte__xidhex',len(_xih),_xih)
-                print('>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
+                print('x',_x,'\t>>x-byte__xidhex',len(_xih),_xih,'\t>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
+                #print('x',_x)
+                #print('>>x-byte__xidhex',len(_xih),_xih)
+                #print('>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
                 
         remainxbytehex = xbytehex[( 1+ (_intNum4byteID*5))*2:]
         if _verbose:
@@ -415,9 +418,10 @@ def decode(datin,_verbose=False):
             _js['b'][_jskey]['nb'][_jsy]['dh'] = _xrawhex
 
             if _verbose:
-                print('x',_x)
-                print('>>x-byte__xidhex',len(_xih),_xih)
-                print('>>x-byte__xrawhex',len(_xrawhex),_xrawhex)                
+                #print('x',_x)
+                print('x',_x,'\t>>x-byte__xidhex',len(_xih),_xih,'\t>>x-byte__xrawhex',len(_xrawhex),_xrawhex)
+                #print('>>x-byte__xidhex',len(_xih),_xih)
+                #print('>>x-byte__xrawhex',len(_xrawhex),_xrawhex)                
                 print('>>x-byte_hexNumNbyteID',len(_hexNumNbyteID), _hexNumNbyteID, _intNumNbyteID)
                 print('>>x-byte__xbytehex',len(xbytehex), xbytehex)
                 print('>>x-byte__remainxbytehex',len(remainxbytehex),remainxbytehex)
@@ -496,9 +500,9 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _xih = _obj1b[_kx]['ih']
         _xrawhex = _obj1b[_kx]['dh']
         if _verbose: 
-            print('_kx', len(_kx) , _kx)
-            print('_xidhex', len(_xih) , _xih)
-            print('_xrawhex', len(_xrawhex) , _xrawhex)
+            print('_kx', len(_kx) , _kx,'\t:_xidhex', len(_xih) , _xih,'\t:_xrawhex', len(_xrawhex) , _xrawhex)
+            #print('_xidhex', len(_xih) , _xih)
+            #print('_xrawhex', len(_xrawhex) , _xrawhex)
             
         if _xih == '01':
             #share 1byte ( Code 01: T633L ) and 2byte ( Code 40: MDVR )
@@ -541,9 +545,10 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _xih = _obj2b[_kx]['ih']
         _xrawhex = _obj2b[_kx]['dh']
         if _verbose: 
-            print('_kx', len(_kx) , _kx)
-            print('_xidhex', len(_xih) , _xih)
-            print('_xrawhex', len(_xrawhex) , _xrawhex)           
+            print('_kx', len(_kx) , _kx,'\t:_xidhex', len(_xih) , _xih,'\t:_xrawhex', len(_xrawhex) , _xrawhex)
+            #print('_kx', len(_kx) , _kx)
+            #print('_xidhex', len(_xih) , _xih)
+            #print('_xrawhex', len(_xrawhex) , _xrawhex)           
         
         if _xih == '08':
             _v_u16SpeedKMH = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)
@@ -598,10 +603,11 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _kx = '{:02d}'.format(_x)
         _xih = _obj4b[_kx]['ih']
         _xrawhex = _obj4b[_kx]['dh']
-        if _verbose: 
-            print('_kx', len(_kx) , _kx)
-            print('_xidhex', len(_xih) , _xih)
-            print('_xrawhex', len(_xrawhex) , _xrawhex)           
+        if _verbose:
+            print('_kx', len(_kx) , _kx,'\t:_xidhex', len(_xih) , _xih,'\t:_xrawhex', len(_xrawhex) , _xrawhex)
+            #print('_kx', len(_kx) , _kx)
+            #print('_xidhex', len(_xih) , _xih)
+            #print('_xrawhex', len(_xrawhex) , _xrawhex)           
         
         if _xih == '02':
             _v_f32Lt = int.from_bytes(binascii.unhexlify(_xrawhex),'little',signed=False)/1000000
@@ -659,10 +665,11 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         _kx = '{:02d}'.format(_x)
         _xih = _objnb[_kx]['ih']
         _xrawhex = _objnb[_kx]['dh']
-        if _verbose: 
-            print('_kx', len(_kx) , _kx)
-            print('_xidhex', len(_xih) , _xih)
-            print('_xrawhex', len(_xrawhex) , _xrawhex)           
+        if _verbose:
+            print('_kx', len(_kx) , _kx,'\t:_xidhex', len(_xih) , _xih,'\t:_xrawhex', len(_xrawhex) , _xrawhex)
+            #print('_kx', len(_kx) , _kx)
+            #print('_xidhex', len(_xih) , _xih)
+            #print('_xrawhex', len(_xrawhex) , _xrawhex)
         
         if _xih == '39':
             _v_c39_hexCard = _xrawhex
