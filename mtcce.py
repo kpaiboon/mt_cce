@@ -23,6 +23,8 @@ SOFTWARE.
 '''
 
 #MT CCE
+# Version 16
+# 2020-05-28 1. MAP A84 Digital_Input 2. y_accel_mg_data = 30 : _y_decel_mg_data = 18
 # Version 15
 # 2020-05-20 1. Bug fixex _v_hexInput <= _v_hexinput= _xrawhex 2. sz = len(__PATTERN_IMEI)
 # Version 14
@@ -60,7 +62,7 @@ import json
 import uuid
 import re
 
-__code_version = 'mtcce.v15'
+__code_version = 'mtcce.v16'
 
 __PATTERN_IMEI = '86'
 __NEW_PREFIX_IMEI = '!!'
@@ -428,8 +430,8 @@ def decode(datin,_verbose=False):
     #_data = json.dumps(_js, indent=4, sort_keys=True)
     _data = json.dumps(_js, sort_keys=True)
 
-    if _verbose:       
-        print(json.dumps(_data, indent=4, sort_keys=True))
+    #if _verbose:       
+    #    print(json.dumps(_data, indent=4, sort_keys=True))
         
     postdat = _data
     
@@ -575,12 +577,9 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_u16Heading', _v_u16Heading)
         print('_v_f32Hdop', _v_f32Hdop)
         print('_v_u16Alt', _v_u16Alt)
-        print('_v_u16HundredthAD1', _v_u16HundredthAD1)
-        print('_v_u16HundredthAD2', _v_u16HundredthAD2)
-        print('_v_u16HundredthAD4', _v_u16HundredthAD3)
-        print('_v_u16HundredthAD4', _v_u16HundredthAD4)
-        print('_v_u16HundredthAD5', _v_u16HundredthAD5)
-        print('_v_u16HundredthAD6', _v_u16HundredthAD6)
+        print('_v_u16HundredthAD1', _v_u16HundredthAD1,'\t\t_v_u16HundredthAD2', _v_u16HundredthAD2)
+        print('_v_u16HundredthAD4', _v_u16HundredthAD3,'\t\t_v_u16HundredthAD4', _v_u16HundredthAD4)
+        print('_v_u16HundredthAD5', _v_u16HundredthAD5,'\t\t_v_u16HundredthAD6', _v_u16HundredthAD6)
         print('_v_u16HundredthFuelPercentage', _v_u16HundredthFuelPercentage)
         print('_v_u16Eventcode_share_1b2b', _v_u16Eventcode_share_1b2b)   
 
@@ -711,14 +710,11 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         print('_v_cOE_hexMccNmc', _v_cOE_hexMccNmc)
         print('_v_cFE2B_hexFwdRevSen', _v_cFE2B_hexFwdRevSen)
         print('_v_c28_c44_share_strPhotoName', _v_c28_c44_share_strPhotoName)
-        print('_v_c2A_hexTemp1', _v_c2A_hexTemp1)
-        print('_v_c2B_hexTemp2', _v_c2B_hexTemp2)
-        print('_v_c2C_hexTemp3', _v_c2C_hexTemp3)
-        print('_v_c2D_hexTemp4', _v_c2D_hexTemp4)
-        print('_v_c2E_hexTemp5', _v_c2E_hexTemp5)
-        print('_v_c2F_hexTemp6', _v_c2F_hexTemp6)
-        print('_v_c30_hexTemp7', _v_c30_hexTemp7)
-        print('_v_c31_hexTemp8', _v_c31_hexTemp8)
+        print('_v_c2A_hexTemp1', _v_c2A_hexTemp1,'\t\t_v_c2B_hexTemp2', _v_c2B_hexTemp2)
+        print('_v_c2C_hexTemp3', _v_c2C_hexTemp3,'\t\t_v_c2D_hexTemp4', _v_c2D_hexTemp4)
+        print('_v_c2E_hexTemp5', _v_c2E_hexTemp5,'\t\t_v_c2F_hexTemp6', _v_c2F_hexTemp6)
+        print('_v_c30_hexTemp7', _v_c30_hexTemp7,'\t\t_v_c31_hexTemp8', _v_c31_hexTemp8)
+
 
     
     #Encode
@@ -856,6 +852,16 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
         if _verbose:
             print('_v_cFE2B_hexFwdRevSen', _v_cFE2B_hexFwdRevSen)
             print('_y_cust_data', _y_cust_data)
+            
+    _y_a84_data = '0|0000|0000|0000|0000|0000'
+    test_hexInput = _v_hexInput
+    if not(len(test_hexInput) >=2):
+        test_hexInput = '00'+test_hexInput
+        
+    _y_a84_data = '{:01d}|00{:s}|{:04X}|{:04X}|{:04X}'.format(0,test_hexInput,0,0,0)
+    
+    _y_accel_mg_data = 30
+    _y_decel_mg_data = 18
         
     if _v_u16Eventcode_share_1b2b == 0:
         # do process
@@ -864,7 +870,6 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     if _verbose:
         print('Final _v_u16Eventcode_share_1b2b', _v_u16Eventcode_share_1b2b)
         print('Final _v_hexLegacyIO', _v_hexLegacyIO)
-
     
     pt="$$"
        
@@ -874,7 +879,8 @@ def pkgdecode(datin,_verbose=False,_x_strImei = '868666777888999',_x_strDataID =
     pt= pt + str(_v_f32Hdop) +',' + str(_v_u16Alt) +',' + str(_v_u32Mileage) +',' + str(_v_u32RunTimeSec) +','    # <Horizontal dilution of precision(HDOP)><Altitude><Mileage><Total time>
     pt= pt + _y_strBaseStationInfo +',' + _y_iost +',' + _y_adcnew +',' + _y_rfid +','    # <Base station info><I/O port status><Analog input value><Assisted event info or RFID>
     pt= pt + _y_cust_data  +',' + '108' +',' + _y_strFuelPerc +',' + '0' +','    # <Customized data><Extended protocol version 108><Fuel percentage><Temperature sensor No. + Temperature value>
-    pt= pt + '0' +',' + '0' +',' + '0' +',' + '0' +','    # <Data N>
+    pt= pt + '0' +',' + '0' +',' + '0' +',' + _y_a84_data +','    # <Data N>
+    pt= pt + str(_y_accel_mg_data) +',' + str(_y_decel_mg_data) +',' +'0' +',' + '0'   # <MaxAccel_mg><MaxDecel_mg>
     pt= pt +'*FF\r\n' # <*Checksum>\r\n
 
     if _verbose:
