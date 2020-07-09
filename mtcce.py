@@ -413,7 +413,8 @@ def decode(datin,_verbose=False):
             _y= 2
             _xrawhex = xbytehex[((_y+_yy)*2):(((_y+_yy)+_intNumNbyteID)*2)] # N-byte
             
-            remainxbytehex = xbytehex[(_y+_intNumNbyteID)*2:] # Need RAW TCP Checking Nbyte..Nbyte-1....Nbyte-2
+            # 2020-07-09 1. MDVR MD522S Fix C39/ MCR
+            remainxbytehex = xbytehex[(_y+_yy+_intNumNbyteID)*2:] # Need RAW TCP Checking Nbyte..Nbyte-1....Nbyte-2
 
             _jsy = '{:02d}'.format(_x)
             _js['b'][_jskey]['nb'][_jsy] = {} # init nest dict
